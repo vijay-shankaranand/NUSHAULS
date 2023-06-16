@@ -15,6 +15,7 @@ import StudentHome from "./page/StudentHome"
 import DeliveryPartnerHome from "./page/DeliveryPartnerHome"
 import Signup from "./page/Signup";
 import LandingPage from "./page/LandingPage"
+import EmailVerify from "./page/EmailVerify"
 import { store } from "./redux/index";
 import { Provider } from "react-redux";
 
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="delivery-partner-home" element={<DeliveryPartnerHome />} />
       <Route path="seller-home" element={<SellerHome />} />
       <Route path="login" element={<Login />} />
+      <Route path="/index/:id/verify/:token" element={<EmailVerify />} />
     
      
     </Route>

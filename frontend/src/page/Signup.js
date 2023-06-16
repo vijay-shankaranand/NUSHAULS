@@ -38,6 +38,7 @@ function Signup() {
         });
     };
 
+
     const handleUploadProfileImage = async (e) => {
         const data = await ImagetoBase64(e.target.files[0])
 
@@ -55,6 +56,9 @@ function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { firstName, email, password, confirmPassword, role , image } = data;
+        if (role === 'student' && email.substring(email.lastIndexOf('@')) !== '@u.nus.edu') {
+            toast("You have selected STUDENT role. Please input your NUS email!")
+        } else {
         if (firstName && email && password && confirmPassword && role && image) {
             if (password === confirmPassword) {
 
@@ -78,20 +82,21 @@ function Signup() {
                 toast("Password & Confirm Password Do Not Match");
             }
         } else {
-            toast("Please Enter Required Fields");
+            toast("Please Enter Required Fields!");
         }
+    }
     };
 
     return (
         <div className="p-10 md:p-10">
             <div className="w-full max-w-sm bg-white m-auto flex  flex-col p-4">
                 {/* <h1 className='text-center text-2xl font-bold'>Sign up</h1> */}
-                <div className="w-20 h-20 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto relative ">
+                <div className="w-40 h-40 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto relative ">
                     <img src={data.image ? data.image : loginSignupImage} className="w-full h-full" />
 
                     <label htmlFor="profileImage">
                         <div className="absolute bottom-0 h-1/3  bg-slate-500 bg-opacity-50 w-full text-center cursor-pointer">
-                            <p className="text-sm p-1 text-white">Upload</p>
+                            <p className="p-2 text-white">Upload</p>
                         </div>
                         <input type={"file"} id="profileImage" accept="image/*" className="hidden" onChange={handleUploadProfileImage} />
                     </label>

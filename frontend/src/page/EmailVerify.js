@@ -1,6 +1,6 @@
 import React, { useState , useEffect, Fragment} from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import axios from "axios"
 
 
 const EmailVerify = () => {
@@ -10,7 +10,7 @@ const EmailVerify = () => {
 	useEffect(() => {
 		const verifyEmailUrl = async () => {
 			try {
-				const url = `https://nushauls.onrender.com/api/index/${param.id}/verify/${param.token}`;
+				const url = `${process.env.REACT_APP_SERVER_DOMIN}/${param.id}/verify/${param.token}`;
 				const { data } = await axios.get(url);
 				console.log(data);
 				setValidUrl(true);
@@ -26,11 +26,7 @@ const EmailVerify = () => {
 			{validUrl ? (
 				<div className="h-screen flex items-center justify-center">
 					<h1>Email verified successfully!</h1>
-					<Link to="/login">
-						<button className="w-full max-w-[150px] m-auto  bg-amber-500 hover:bg-blue-800 cursor-pointer  text-white text-xl font-medium text-center py-1 rounded-full mt-4">
-              Login
-            </button>
-					</Link>
+
 				</div>
 			) : (
 				<h1>404 Not Found</h1>

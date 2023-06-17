@@ -40,6 +40,7 @@ function Signup() {
 
 
     const handleUploadProfileImage = async (e) => {
+        if (e.target.files[0]) {
         const data = await ImagetoBase64(e.target.files[0])
 
 
@@ -49,6 +50,7 @@ function Signup() {
                 image: data
             }
         })
+    }
 
     }
     

@@ -119,8 +119,35 @@ app.post("/login", async(req, res)=> {
           }
     }
     else {
-        res.send({message : "Email/Password is incorrect. Please try again", alert : false})
+        res.send({message : "Email or Password is incorrect/Not signed up.", alert : false})
       }
+})
+
+//product section
+
+const schemaProduct = mongoose.Schema({
+    name : String,
+    category : String,
+    image : String,
+    price : String,
+    description : String
+});
+
+const productModel = mongoose.model("product", schemaProduct)
+
+//upload product in db (api)
+
+app.post("/uploadProduct", async (req,res) => {
+  console.log(req.body)
+  const data = await productModel(req.body)
+  const datasave = await data.save()
+  res.send({message : "Uploaded successfully"})
+
+})
+
+app.get("/product", async (req,res) => {
+  const data = await productModel.find({})
+  res.send(JSON.stringify(data))
 })
 
 app.listen(PORT, () => console.log("Server is running at port : " + PORT))

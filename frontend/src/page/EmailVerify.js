@@ -24,8 +24,11 @@ const EmailVerify = () => {
   return (
     <Fragment>
 			{validUrl ? (
-				<div className="h-screen flex items-center justify-center">
-					<h1>Email verified successfully!</h1>
+				<div className="p-80 wd-40 flex items-center h-full justify-center items-center">
+					<p>Email verified successfully!</p>
+					<Link to="/login">
+							<button className="rounded bg-amber-500 hover:bg-blue-800">Login</button>
+					</Link>
 
 				</div>
 			) : (

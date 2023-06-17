@@ -60,22 +60,23 @@ const Header = () => {
                 </div>
             {showMenu && (
               <div className="absolute right-2 bg-white py-2  shadow drop-shadow-md flex flex-col min-w-[120px] text-center">
-                {userData.email === process.env.REACT_APP_ADMIN_EMAIL && (
+                {userData.role !== '' && (
                   <Link
-                    to={"newproduct"}
-                    className="whitespace-nowrap cursor-pointer px-2"
+                    to={"profile"}
+                    className="whitespace-nowrap cursor-pointer px-2 hover:bg-slate-200 text-l"
                   >
-                    New product
+                    User Profile
                   </Link>
                 )}
 
                 {userData.image ? (
                   <p
-                    className="cursor-pointer px-2 hover:bg-slate-200"
+                    className="cursor-pointer px-2 hover:bg-slate-200 text-l"
                     onClick={handleLogout}
                   >
-                    Logout ({userData.firstName}){" "}
+                    Log Out
                   </p>
+                  
                 ) : (
                   <Link
                     to={"login"}
@@ -84,6 +85,7 @@ const Header = () => {
                     Login
                   </Link>
                 )}
+                
                 </div>
             )}
           </div>

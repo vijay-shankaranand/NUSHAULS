@@ -15,8 +15,13 @@ import StudentHome from "./page/StudentHome"
 import DeliveryPartnerHome from "./page/DeliveryPartnerHome"
 import Signup from "./page/Signup";
 import LandingPage from "./page/LandingPage"
+import EmailVerify from "./page/EmailVerify"
 import { store } from "./redux/index";
 import { Provider } from "react-redux";
+import Profile from "./page/Profile"
+import Newproduct from "./page/Newproduct"
+import Myorders from "./page/Myorders"
+
 
 
 const router = createBrowserRouter(
@@ -30,7 +35,10 @@ const router = createBrowserRouter(
       <Route path="delivery-partner-home" element={<DeliveryPartnerHome />} />
       <Route path="seller-home" element={<SellerHome />} />
       <Route path="login" element={<Login />} />
-    
+      <Route path="/index/:id/verify/:token" element={<EmailVerify />} />
+      <Route path="profile" element={<Profile/>} />
+      <Route path="newproduct" element={<Newproduct/>} />
+      <Route path="myorders" element={<Myorders/>} />
      
     </Route>
   )

@@ -16,7 +16,7 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate()  
-  const userData = useSelector(state => state)
+  
 
 
   const dispatch = useDispatch()
@@ -70,9 +70,10 @@ const Login = () => {
           }
           
         }, 1000);
+        
       }
 
-      console.log(userData)
+      
     }
     else{
         alert("Please Enter required fields")

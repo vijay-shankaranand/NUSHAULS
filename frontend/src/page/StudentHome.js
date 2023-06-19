@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 const StudentHome = () => {
   const productData = useSelector((state=>state.product.productList))
   const homeProductCartList = productData
+  console.log(homeProductCartList)
 
 
   return (
@@ -35,11 +36,11 @@ const StudentHome = () => {
             homeProductCartList[0] && homeProductCartList.map(el => {
               return (
                 <Homecard
-                key={el.id}
+                key={el._id}
+                id={el._id}
                 image={el.image}
                 name={el.name}
                 price={el.price}
-                category={el.category}
                 />
               )
             })

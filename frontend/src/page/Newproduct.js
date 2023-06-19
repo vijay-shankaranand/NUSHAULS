@@ -1,18 +1,81 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import {BsCloudUpload} from "react-icons/bs"
 import { ImagetoBase64 } from '../utility/ImagetoBase64'
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const Newproduct = () => {
+  const userData = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [data,setData] = useState({
     name : "",
     category : "",
     image : "",
     price : "",
-    description : ""
+    description : "",
+    user : "",
+    region: ""
   })
+
+  data.user = userData._id
+
+  const towns = [
+    "Ang Mo Kio",
+    "Bedok",
+    "Bishan",
+    "Boon Lay",
+    "Bukit Batok",
+    "Bukit Merah",
+    "Bukit Panjang",
+    "Bukit Timah",
+    "Central Water Catchment",
+    "Changi",
+    "Changi Bay",
+    "Choa Chu Kang",
+    "Clementi",
+    "Downtown Core",
+    "Geylang",
+    "Hougang",
+    "Jurong East",
+    "Jurong West",
+    "Kallang",
+    "Lim Chu Kang",
+    "Mandai",
+    "Marina East",
+    "Marina South",
+    "Marine Parade",
+    "Museum",
+    "Newton",
+    "Novena",
+    "Orchard",
+    "Outram",
+    "Pasir Ris",
+    "Paya Lebar",
+    "Pioneer",
+    "Punggol",
+    "Queenstown",
+    "River Valley",
+    "Rochor",
+    "Seletar",
+    "Sembawang",
+    "Sengkang",
+    "Serangoon",
+    "Simpang",
+    "Singapore River",
+    "Southern Islands",
+    "Sungei Kadut",
+    "Tampines",
+    "Tanglin",
+    "Tengah",
+    "Toa Payoh",
+    "Tuas",
+    "Western Islands",
+    "Western Water Catchment",
+    "Woodlands",
+    "Yishun"
+  ]
 
   const handleOnChange = (e)=>{
     const {name,value} = e.target
@@ -81,7 +144,9 @@ const Newproduct = () => {
           category : "",
           image : "",
           price : "",
-          description : ""
+          description : "",
+          user : '',
+          region: ''
         }
       })
       navigate("/seller-home");
@@ -93,8 +158,12 @@ const Newproduct = () => {
   }
 
   return (
+<div className="">
+					
+          <div className="m-auto w-full text-center p-10 bg-amber-200">
+          <h2 className="text-4xl font-bold">Add New <span className="text-amber-500">Product</span></h2>
+          </div>
     <div className="p-4">
-        <h1 className="m-auto w-full max-w-md flex-col px-30 text-2xl py-10 text-center bg-amber-200">New Product</h1>
        <form className='m-auto w-full max-w-md  shadow flex flex-col p-2' onSubmit={handleSubmit}>
         <label htmlFor='name'>Name</label>
         <input type={"text"}  name="name" className='bg-slate-200 p-1 my-1' onChange={handleOnChange} value={data.name} maxlength="20"/>
@@ -102,10 +171,10 @@ const Newproduct = () => {
         <label htmlFor='category'>Category</label>
         <select className='bg-slate-200 p-2 my-2' id='category' name='category' onChange={handleOnChange} value={data.category}>
           <option value='' selected disabled>Select Category</option>
-          <option value={"food"}>Food&Snacks</option>
-          <option value={"household"}>Household</option>
-          <option value={"medical"}>Medical</option>
-          <option value={"misc"}>Misc</option>
+          <option value={"Edibles"}>Food & Snacks</option>
+          <option value={"Household"}>Household</option>
+          <option value={"Medical"}>Medical</option>
+          <option value={"Misc"}>Misc</option>
         </select>
 
         <label htmlFor='image'>Image
@@ -118,6 +187,16 @@ const Newproduct = () => {
            <input type={"file"} accept="image/*" id="image" onChange={uploadImage} className="hidden"/>
         </div>
         </label>
+
+        <label className="pt-3" htmlFor='Region'>Region</label>
+        <select className='bg-slate-200 p-2 my-2' id='region' name='region' onChange={handleOnChange} value={data.region}>
+          <option value='' selected disabled>Select Region</option>
+          {towns.map((region) => (
+          <option key={region} value={region}>
+            {region}
+          </option>
+        ))}
+        </select>
         
 
         <label htmlFor='price' className='my-1'>Price</label>
@@ -129,6 +208,7 @@ const Newproduct = () => {
         
         
        </form>
+    </div>
     </div>
   )
 }

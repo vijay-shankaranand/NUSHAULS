@@ -11,6 +11,11 @@ import { useSelector } from "react-redux";
 const SellerHome = () => {
   const productData = useSelector((state=>state.product.productList))
   const homeProductCartList = productData
+  const userData = useSelector((state) => state.user);
+  console.log(userData._id)
+  console.log(homeProductCartList.filter((product) => product.user === userData._id))
+  
+  
   return (
     <div className="">
 					
@@ -24,10 +29,11 @@ const SellerHome = () => {
           </div>
 					<div className="flex flex-wrap gap-5 p-5 justify-center">
           {
-            homeProductCartList[0] && homeProductCartList.map(el => {
+            homeProductCartList[0] && homeProductCartList.filter((product) => product.user === userData._id).map(el => {
               return (
                 <Homecard
-                key={el.id}
+                key={el._id}
+                id={el._id}
                 image={el.image}
                 name={el.name}
                 price={el.price}

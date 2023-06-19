@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from 'react-hot-toast'
 
-const Product = () => {
+const ProductSeller = () => {
 
 const userData = useSelector((state) => state.user);    
 const productData = useSelector((state=>state.product.productList))
@@ -100,10 +100,10 @@ console.log(data)
           <div className="m-auto w-full text-center p-10 bg-amber-200">
           <h2 className="text-4xl font-bold">Product <span className="text-amber-500">Info</span></h2>
           </div>
-          <form onSubmit={handleSubmit}>
+          
         <div className="p-2 md:p-4">
         <div className="w-full max-w-4xl m-auto p-5">
-          <div className="w-[400px] h-[500px]  w-full pb-5">
+          <div className="w-[400px] h-[500px] w-full pb-5">
             <img
               src={productData[0] && productData.filter((el) => el._id === filterby)[0].image}
               className="hover:scale-105 transition-all h-full" alt="loading"
@@ -117,10 +117,7 @@ console.log(data)
             <p className=" font-bold md:text-2xl">
               <span className="text-amber-500 ">$</span>
               <span>{productData[0] && productData.filter((el) => el._id === filterby)[0].price}</span>
-            </p>
-            <div className="font-bold text-l">
-              <p>Delivery fee: <span className="text-amber-500 ">$</span>{deliveryEst}</p>    
-            </div>   
+            </p>   
             <div>
               <p className="text-slate-600 font-medium">Description : </p>
               <p>{productData[0] && productData.filter((el) => el._id === filterby)[0].description}</p>
@@ -129,61 +126,21 @@ console.log(data)
               <p className="text-slate-600 font-medium">Region : </p>
               <p>{productData[0] && productData.filter((el) => el._id === filterby)[0].region}</p>
             </div>
-            <label for="timeSlot" className="text-slate-600 font-medium">Choose a timeslot for delivery:</label> 
-    <select className="bg-slate-100 border-solid border-2 rounded border-slate-600 p-2"
-    name="timeSlot"
-    id="timeSlot"
-    value={data.timeSlot}
-    onChange={handleOnChange}
-    > 
-    <option value="" selected disabled>Please Select</option> 
-    {options.map((option) => (
-        <option key={option.value} value={option.value} disabled={option.time < currentTime}>
-          {option.label}
-        </option>
-      ))} 
-    </select>
-    <label for="residence" className="text-slate-600 font-medium">Residence:</label> 
-    <select className="bg-slate-100 border-solid border-2 rounded border-slate-600 p-2"
-    name="residence"
-    id="residence" 
-    value={data.residence}
-    onChange={handleOnChange}> 
-    <option value="" selected disabled>Please Select</option>
-    <option value="KEVII">King Edward VII Hall</option>
-    <option value="PGPR">Prince George's Park Residence</option>
-    <option value="Temasek">Temasek Hall</option>
-    <option value="Eusoff">Eusoff Hall</option>
-    <option value="Raffles">Raffles Hall</option>
-    <option value="Sheares">Sheares Hall</option>
-    <option value="KentRidge">Kent Ridge Hall</option>
-    <option value="UTR">UTown Residence</option>
-    <option value="Tembusu">Tembusu College</option>
-    <option value="CAPT">CAPT College</option>
-    <option value="Cinnamon">Cinnamon College</option>
-    <option value="RC4">RC4 College</option>
-
-    </select>
-    
-    <div className="font-bold text-3xl pt-5">Grand Total: <span className="text-amber-500 ">$</span>{productData[0] && Number(productData.filter((el) => el._id === filterby)[0].price) + deliveryEst}</div>
-
-            <div className="flex gap-3 pt-2 pt-5">
-          <button className="bg-yellow-500 py-1 mt-2 rounded hover:bg-yellow-600 min-w-[100px]">Place Order</button>
-          
           </div>
+          <div className="flex gap-3 pt-2 pt-3">
+          <button className="bg-rose-600 hover:bg-rose-800 py-1 mt-2 rounded min-w-[100px] text-white">Delete</button>
+          <button className="bg-blue-600 hover:bg-blue-800 py-1 mt-2 rounded min-w-[100px] text-white">Edit</button>  
           </div>
         </div>
-        <div className="pt-10">
-            <div><span className="text-red-600">*</span>All products are cash on delivery</div>
-            <div><span className="text-red-600">*</span>Delivery slot closes 1hr in advance to faciliate delivery process</div>
-            <div><span className="text-red-600">*</span>Fare calculated based on approx distance (temporarily $1)</div>
-        </div>
+        
       </div>
-      </form>
+
+      
+      
       </div>
     
     )
   
 }
 
-export default Product
+export default ProductSeller

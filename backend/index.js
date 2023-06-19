@@ -111,7 +111,7 @@ app.post("/login", async(req, res)=> {
                 userId: dataSend._id,
                 token: crypto.randomBytes(32).toString("hex"),
               }).save();
-              const url = `${process.env.BASE_URL}index/${user._id}/verify/${token.token}`;
+              const url = `${process.env.BASE_URL}index/${dataSend._id}/verify/${token.token}`;
               await sendEmail(dataSend.email, "Verify Email", 'click here to verify your email (link expires in 3 minutes): ' + url);
             }
             res.send({message: "An email has been sent to your account, please verify before logging in!", alert : false})

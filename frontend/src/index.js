@@ -21,7 +21,7 @@ import { Provider } from "react-redux";
 import Profile from "./page/Profile"
 import Newproduct from "./page/Newproduct"
 import Myorders from "./page/Myorders"
-
+import Product from "./page/Product"
 
 
 const router = createBrowserRouter(
@@ -39,6 +39,8 @@ const router = createBrowserRouter(
       <Route path="profile" element={<Profile/>} />
       <Route path="newproduct" element={<Newproduct/>} />
       <Route path="myorders" element={<Myorders/>} />
+      <Route path="product/:filterby" element={<Product/>} />
+
      
     </Route>
   )

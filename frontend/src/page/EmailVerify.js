@@ -32,7 +32,7 @@ const EmailVerify = () => {
 
 				</div>
 			) : (
-				<h1>404 Not Found</h1>
+				<h1>404 NOT FOUND. You have already verified your email or incorrect URL</h1>
 			)}
 		</Fragment>
   )

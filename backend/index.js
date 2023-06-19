@@ -70,15 +70,16 @@ app.post("/signup", async(req,res)=>{
 app.get("/:id/verify/:token/", async (req, res) => {
 	try {
 		const user = await userModel.findOne({ _id: req.params.id });
-		if (!user) return res.send({ message: "Invalid link" });
+		if (!user) return res.status(400).send({ message: "Invalid link" });
 
 		const token = await Token.findOne({
 			userId: user._id,
 			token: req.params.token,
 		});
-		if (!token) return res.send({ message: "Invalid link" });
+		if (!token) return res.status(400).send({ message: "Invalid link" });
 
 		await userModel.updateOne({ _id: user._id}, {verified: true });
+    await token.deleteOne()
 
 		res.send({ message: "Email verified successfully" });
 	} catch (error) {
@@ -111,7 +112,7 @@ app.post("/login", async(req, res)=> {
                 token: crypto.randomBytes(32).toString("hex"),
               }).save();
               const url = `${process.env.BASE_URL}index/${user._id}/verify/${token.token}`;
-              await sendEmail(dataSend.email, "Verify Email", 'click here to verify your email: ' + url);
+              await sendEmail(dataSend.email, "Verify Email", 'click here to verify your email (link expires in 3 minutes): ' + url);
             }
             res.send({message: "An email has been sent to your account, please verify before logging in!", alert : false})
           } else {
@@ -130,7 +131,9 @@ const schemaProduct = mongoose.Schema({
     category : String,
     image : String,
     price : String,
-    description : String
+    description : String,
+    user : String,
+    region : String
 });
 
 const productModel = mongoose.model("product", schemaProduct)
@@ -149,5 +152,28 @@ app.get("/product", async (req,res) => {
   const data = await productModel.find({})
   res.send(JSON.stringify(data))
 })
+
+
+//orders section
+
+const schemaOrder = mongoose.Schema({
+  product : String,
+  timeSlot : String,
+  state : String,
+  timePlaced : String,
+  timeState : String,
+  residence: String,
+  deliveryFee: String,
+  user : String
+})
+
+const orderModel = mongoose.model("order", schemaOrder)
+
+app.post("/uploadOrder" , async (req, res) => {
+  console.log(req.body)
+  const data = await orderModel(req.body)
+  const datasave = await data.save()
+  res.send({message: "Uploaded successfully"})
+}) 
 
 app.listen(PORT, () => console.log("Server is running at port : " + PORT))

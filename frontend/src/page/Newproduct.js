@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {BsCloudUpload} from "react-icons/bs"
 import { ImagetoBase64 } from '../utility/ImagetoBase64'
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 const Newproduct = () => {
@@ -180,7 +180,7 @@ const Newproduct = () => {
         <label htmlFor='image'>Image
         <div  className='h-60 w-full bg-slate-200  rounded flex items-center justify-center cursor-pointer'>
             {
-              data.image ? <img src={data.image} className="h-full" /> :<span className='text-5xl'><BsCloudUpload/></span> 
+              data.image ? <img src={data.image} className="h-full" alt=""/> :<span className='text-5xl'><BsCloudUpload/></span> 
             }
             
             

@@ -1,78 +1,15 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { toast } from 'react-hot-toast'
+
 
 const ProductSeller = () => {
 
-const userData = useSelector((state) => state.user);    
+ 
 const productData = useSelector((state=>state.product.productList))
-const navigate = useNavigate();
+
 const {filterby} = useParams()
 
-const [data,setData] = useState({
-  product : "",
-  timeSlot : "",
-  state : "",
-  timePlaced : "",
-  timeState : "",
-  residence: "",
-  deliveryFee: "",
-  user : ""
-})
-
-const handleOnChange = (e)=>{
-  const {name,value} = e.target
-
-  setData((preve)=>{
-      return{
-        ...preve,
-        [name] : value
-      }
-  })
-
-}
-
-const handleSubmit = async(e)=>{
-  e.preventDefault()
-
-console.log(data)
-
-  const {residence, timeSlot} = data
-
-  if(residence , timeSlot){
-    const fetchData = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/uploadOrder`,{
-      method : "POST",
-      headers : {
-        "content-type" : "application/json"
-      },
-      body : JSON.stringify(data)
-    })
-
-    const fetchRes =  await fetchData.json()
-
-    console.log(fetchRes)
-    toast(fetchRes.message)
-
-    setData(()=>{
-      return{
-        product : "",
-        timeSlot : "",
-        state : "",
-        timePlaced : "",
-        timeState : "",
-        residence: "",
-        user : ""
-      }
-    })
-    navigate("/myorders");
-  }
-  else{
-    toast("Enter Required Fields")
-  }
-  
-}
     return (
       
         <div className="">

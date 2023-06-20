@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Ordercard, { getSelectedItems } from "../component/Ordercard";
 import { useSelector } from "react-redux";
 import { toast } from 'react-hot-toast';

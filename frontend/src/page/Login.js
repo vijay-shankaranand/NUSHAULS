@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import loginSignupImage from "../asset/login-animation.gif";
 import { BiShow, BiHide } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import {toast} from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { loginRedux } from "../redux/userSlice";
 
 
@@ -86,7 +85,7 @@ const Login = () => {
     <div className="w-full max-w-sm bg-white m-auto flex  flex-col p-4">
       {/* <h1 className='text-center text-2xl font-bold'>Sign up</h1> */}
       <div className="w-20 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto">
-        <img src={loginSignupImage} className="w-full" />
+        <img src={loginSignupImage} className="w-full" alt=""/>
       </div>
 
       <form className="w-full py-3 flex flex-col" onSubmit={handleSubmit}>

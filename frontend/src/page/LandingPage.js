@@ -1,13 +1,8 @@
-import React, { useState } from "react";
-import loginSignupImage from "../asset/login-animation.gif";
+import React from "react";
 import USERSImage from "../asset/STUDENT.png";
 import DELIVERYPARTNERSImage from "../asset/DELIVERYPARTNER.png";
 import SELLERSImage from "../asset/SELLER.png";
-import { BiShow, BiHide } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
-import { BsEmojiSmileUpsideDown } from "react-icons/bs";
-import { ImagetoBase64 } from "../utility/ImagetoBase64";
-import { toast } from "react-hot-toast";
+
 
 
 const LandingPage = () => {

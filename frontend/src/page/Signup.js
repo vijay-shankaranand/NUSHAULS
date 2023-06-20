@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import loginSignupImage from "../asset/login-animation.gif";
 import { BiShow, BiHide } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
-import { BsEmojiSmileUpsideDown } from "react-icons/bs";
 import { ImagetoBase64 } from "../utility/ImagetoBase64";
 import { toast } from "react-hot-toast";
 
@@ -94,7 +93,7 @@ function Signup() {
             <div className="w-full max-w-sm bg-white m-auto flex  flex-col p-4">
                 {/* <h1 className='text-center text-2xl font-bold'>Sign up</h1> */}
                 <div className="w-40 h-40 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto relative ">
-                    <img src={data.image ? data.image : loginSignupImage} className="w-full h-full" />
+                    <img src={data.image ? data.image : loginSignupImage} className="w-full h-full" alt=""/>
 
                     <label htmlFor="profileImage">
                         <div className="absolute bottom-0 h-1/3  bg-slate-500 bg-opacity-50 w-full text-center cursor-pointer">

@@ -19,13 +19,14 @@ const [data,setData] = useState({
   timeState : "",
   residence: "",
   deliveryFee: "",
-  user : ""
+  user : "",
+  deliverer:""
 })
 
 const deliveryEst = 1.00;
 
 data.product = filterby;
-data.state = "Placed"
+data.state = "Available"
 data.timePlaced = new Date().toLocaleTimeString()
 data.timeState = new Date().toLocaleTimeString()
 data.user = userData._id;
@@ -38,6 +39,7 @@ const options = [
     { label: '15:00', value: '15:00', time: '14:00' },
     { label: '18:00', value: '18:00', time: '17:00' },
     { label: '21:00', value: '21:00', time: '20:00' },
+    { label: '24:00', value: '24:00', time: '24:00' },
   ];
 
 const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -83,7 +85,8 @@ console.log(data)
         timePlaced : "",
         timeState : "",
         residence: "",
-        user : ""
+        user : "",
+        deliverer:""
       }
     })
     navigate("/myorders");
@@ -103,7 +106,7 @@ console.log(data)
           <form onSubmit={handleSubmit}>
         <div className="p-2 md:p-4">
         <div className="w-full max-w-4xl m-auto p-5">
-          <div className="w-[400px] h-[500px]  w-full pb-5">
+          <div className="w-[400px] h-[500px]  w-full pb-5 ">
             <img
               src={productData[0] && productData.filter((el) => el._id === filterby)[0].image}
               className="hover:scale-105 transition-all h-full" alt="loading"
@@ -167,8 +170,8 @@ console.log(data)
     
     <div className="font-bold text-3xl pt-5">Grand Total: <span className="text-amber-500 ">$</span>{productData[0] && Number(productData.filter((el) => el._id === filterby)[0].price) + deliveryEst}</div>
 
-            <div className="flex gap-3 pt-2 pt-5">
-          <button className="bg-yellow-500 py-1 mt-2 rounded hover:bg-yellow-600 min-w-[100px]">Place Order</button>
+            <div className="flex gap-3 pt-3">
+          <button className="bg-yellow-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Place Order</button>
           
           </div>
           </div>

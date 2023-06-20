@@ -23,6 +23,7 @@ import Newproduct from "./page/Newproduct"
 import Myorders from "./page/Myorders"
 import Product from "./page/Product"
 import ProductSeller from "./page/ProductSeller"
+import Myjobs from "./page/Myjobs"
 
 
 const router = createBrowserRouter(
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
       <Route path="myorders" element={<Myorders/>} />
       <Route path="product/:filterby" element={<Product/>} />
       <Route path="product-seller/:filterby" element={<ProductSeller/>} />
+      <Route path="myjobs" element={<Myjobs/>} />
 
      
     </Route>

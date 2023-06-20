@@ -22,26 +22,6 @@ const [data,setData] = useState({
   user : ""
 })
 
-const deliveryEst = 1.00;
-
-data.product = filterby;
-data.state = "Placed"
-data.timePlaced = new Date().toLocaleTimeString()
-data.timeState = new Date().toLocaleTimeString()
-data.user = userData._id;
-data.deliveryFee = deliveryEst;
-console.log(data)
-
-const options = [
-    { label: '09:00', value: '09:00', time: '08:00' },
-    { label: '12:00', value: '12:00', time: '11:00' },
-    { label: '15:00', value: '15:00', time: '14:00' },
-    { label: '18:00', value: '18:00', time: '17:00' },
-    { label: '21:00', value: '21:00', time: '20:00' },
-  ];
-
-const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
 const handleOnChange = (e)=>{
   const {name,value} = e.target
 
@@ -128,8 +108,8 @@ console.log(data)
             </div>
           </div>
           <div className="flex gap-3 pt-2 pt-3">
-          <button className="bg-rose-600 hover:bg-rose-800 py-1 mt-2 rounded min-w-[100px] text-white">Delete</button>
-          <button className="bg-blue-600 hover:bg-blue-800 py-1 mt-2 rounded min-w-[100px] text-white">Edit</button>  
+          <button className="bg-rose-600 hover:bg-rose-800 text-white font-bold py-2 px-4 rounded">Delete</button>
+          <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Edit</button>  
           </div>
         </div>
         

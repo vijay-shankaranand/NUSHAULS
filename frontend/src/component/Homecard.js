@@ -13,7 +13,7 @@ const Homecard = ({name, image, category, price, id}) => {
       { userData.role === 'student' ?
       (<Link to={`/product/${id}`} onClick={()=>window.scrollTo({top:"0",behavior : "smooth"})} >
         <div className='bg-amber-200 shadow-md p-2 rounded cursor-pointer hover:shadow-lg drop-shadow-lg  h-[290px] w-[218px]'>
-            <div className="w-40 h-[220px] w-[200px]">
+            <div className="w-40 h-[220px] w-[200px] border-4">
                 <img src={image} className="h-full w-full" alt='loading'/>
             </div>
             <h3 className='font-semibold text-slate-600 text-center capitalize text-lg overflow-hidden'>{name}</h3>
@@ -22,7 +22,7 @@ const Homecard = ({name, image, category, price, id}) => {
         </Link>) :
         <Link to={`/product-seller/${id}`} onClick={()=>window.scrollTo({top:"0",behavior : "smooth"})} >
         <div className='bg-amber-200 shadow-md p-2 rounded cursor-pointer hover:shadow-lg drop-shadow-lg  h-[290px] w-[218px]'>
-            <div className="w-40 h-[220px] w-[200px]">
+            <div className="w-40 h-[220px] w-[200px] border-4">
                 <img src={image} className="h-full w-full" alt='loading'/>
             </div>
             <h3 className='font-semibold text-slate-600 text-center capitalize text-lg overflow-hidden'>{name}</h3>

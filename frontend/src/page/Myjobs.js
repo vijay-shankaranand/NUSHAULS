@@ -12,25 +12,24 @@ const DeliveryPartnerHome = () => {
 
   const fulfillItems = () => {
     const itemIds = getSelectedItems();
-    const delivererId = userData._id;
-    console.log(delivererId)
+   
     // Send the selected item IDs to the server for updating in MongoDB
     if (itemIds.length === 0) {
-      toast("Please select at least 1 order to accept")
+      toast("Please select at least 1 order to continue")
     } else {
-    fetch(`${process.env.REACT_APP_SERVER_DOMIN}/orderAccept`, {
+    fetch(`${process.env.REACT_APP_SERVER_DOMIN}/orderDeliver`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ itemIds, delivererId })
+      body: JSON.stringify({ itemIds })
     })
       .then(response => response.json())
       .then(data => {
         // Handle the response from the server if needed
         console.log(data);
-        toast("Order(s) accepted successfully")
-        navigate("/myjobs")
+        toast("Order(s) Delivered")
+        navigate("/delivery-partner-home")
       })
       .catch(error => {
         // Handle any errors that occurred during the request
@@ -54,22 +53,19 @@ const DeliveryPartnerHome = () => {
     <div className="">
 					
           <div className="m-auto w-full text-center p-10 bg-amber-200">
-          <h2 className="text-4xl font-bold"> Orders <span className="text-amber-500">Available</span></h2>
+          <h2 className="text-4xl font-bold"> Accepted <span className="text-amber-500">Jobs</span></h2>
           </div>
           <form>
           <div className="flex p-10">
             
-            <button id="fulfillButton" type="button" className="absolute right-20 bg-amber-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Fulfill</button>
+            <button id="fulfillButton" type="button" className="absolute right-20 bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded">Delivery Complete</button>
 					  
-            <Link to="/myjobs">
-            <button className="absolute left-20 bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">My jobs</button>
-					  </Link>
             
           </div>
           
 					<div className="p-5 flex flex-col-reverse">
           {
-            orderData[0] && orderData.filter((order) => order.state === "Available").map(el => {
+            orderData[0] && orderData.filter((order) => order.deliverer === userData._id).map(el => {
               return (
                 <Ordercard
                 key={el._id}

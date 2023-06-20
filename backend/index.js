@@ -164,7 +164,8 @@ const schemaOrder = mongoose.Schema({
   timeState : String,
   residence: String,
   deliveryFee: String,
-  user : String
+  user : String,
+  deliverer: String
 })
 
 const orderModel = mongoose.model("order", schemaOrder)
@@ -174,6 +175,66 @@ app.post("/uploadOrder" , async (req, res) => {
   const data = await orderModel(req.body)
   const datasave = await data.save()
   res.send({message: "Uploaded successfully"})
+}) 
+
+app.get("/order", async (req, res) => {
+  const currentTime = new Date();
+  const currentHour = currentTime.getHours();
+  const currentMinute = currentTime.getMinutes();
+
+  const timeSlotCondition = {
+    $expr: {
+      $and: [
+        { $lte: [{ $toInt: { $substr: ["$timeSlot", 0, 2] } }, currentHour] },
+        {
+          $or: [
+            { $lt: [{ $toInt: { $substr: ["$timeSlot", 0, 2] } }, currentHour] },
+            { $lte: [{ $toInt: { $substr: ["$timeSlot", 3, 2] } }, currentMinute] }
+          ]
+        }
+      ]
+    },
+    state: "Available"
+  };
+
+  const updateOperation = {
+    $set: { state: "Expired" }
+  };
+
+  await orderModel.updateMany(timeSlotCondition, updateOperation);
+
+  const updatedData = await orderModel.find({}); // Fetch updated data after the update operation
+
+  res.send(JSON.stringify(updatedData));
+});
+
+app.post("/orderAccept" , async (req, res) => {
+  const { itemIds, delivererId } = req.body;
+  console.log(delivererId)
+  try {
+    await orderModel.updateMany(
+      { _id: { $in: itemIds } },
+      { $set: { state: 'Accepted' , deliverer: delivererId }}
+    );
+    res.json({ message: 'Item(s) accepted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while accepting items' });
+  }
+}) 
+
+app.post("/orderDeliver" , async (req, res) => {
+  const { itemIds } = req.body;
+  try {
+    await orderModel.updateMany(
+      { _id: { $in: itemIds } },
+      { $set: { state: 'Delivered' }}
+    );
+    res.json({ message: 'Item(s) registered as delivered' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while accepted items' });
+  }
 }) 
 
 app.listen(PORT, () => console.log("Server is running at port : " + PORT))

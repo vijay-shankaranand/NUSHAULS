@@ -9,7 +9,7 @@ module.exports = async (email, subject, text) => {
             secure: Boolean(process.env.SECURE),
             auth: {
                 user: 'nushauls@gmail.com',
-                pass: 'ubaddrxdodvjybly'
+                pass: 'rlpguxponxbnakmi'
             }
         })
 

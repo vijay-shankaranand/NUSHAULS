@@ -5,7 +5,7 @@ import success from '../asset/success.png'
 
 
 const EmailVerify = () => {
-  const [validUrl, setValidUrl] = useState(true);
+  const [validUrl, setValidUrl] = useState(false);
 	const param = useParams();
 
 	useEffect(() => {

@@ -84,7 +84,7 @@ app.get("/:id/verify/:token/", async (req, res) => {
 		res.send({ message: "Email verified successfully" });
 	} catch (error) {
     console.log(error);
-		res.send({ message: "Internal Server Error" });
+		res.status(500).send({ message: "Internal Server Error" });
 	}
 });
 

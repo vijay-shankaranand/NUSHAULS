@@ -59,7 +59,7 @@ const DeliveryPartnerHome = () => {
           <form>
           <div className="flex p-10">
             
-            <button id="fulfillButton" type="button" className="absolute right-20 bg-amber-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Fulfill</button>
+            <button id="fulfillButton" type="button" className="absolute right-20 bg-amber-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Accept</button>
 					  
             <Link to="/myjobs">
             <button className="absolute left-20 bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">My jobs</button>

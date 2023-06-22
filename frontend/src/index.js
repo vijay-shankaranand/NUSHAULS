@@ -1,67 +1,86 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./page/Login";
-import SellerHome from "./page/SellerHome"
-import StudentHome from "./page/StudentHome"
-import DeliveryPartnerHome from "./page/DeliveryPartnerHome"
+import SellerHome from "./page/SellerHome";
+import StudentHome from "./page/StudentHome";
+import DeliveryPartnerHome from "./page/DeliveryPartnerHome";
 import Signup from "./page/Signup";
-import LandingPage from "./page/LandingPage"
-import EmailVerify from "./page/EmailVerify"
+import LandingPage from "./page/LandingPage";
+import EmailVerify from "./page/EmailVerify";
 import { store } from "./redux/index";
 import { Provider } from "react-redux";
-import Profile from "./page/Profile"
-import Newproduct from "./page/Newproduct"
-import Myorders from "./page/Myorders"
-import Product from "./page/Product"
-import ProductSeller from "./page/ProductSeller"
-import Myjobs from "./page/Myjobs"
+import Profile from "./page/Profile";
+import Newproduct from "./page/Newproduct";
+import Myorders from "./page/Myorders";
+import Product from "./page/Product";
+import ProductSeller from "./page/ProductSeller";
+import Myjobs from "./page/Myjobs";
+import { AuthProvider } from './context/AuthProvider';
+import Unauthorised from "./page/Unauthorised";
+import Missing from "./page/Missing";
+import RequireAuth from "./component/RequireAuth";
 
+const AppRouter = () => {
+return (
+  <BrowserRouter>
+<AuthProvider>
+<Routes>
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route index element={<LandingPage />} />
+<Route path="/" element={<App />}>
+{ /* public routes */}
+<Route index element={<LandingPage />} />
+<Route path="signup" element={<Signup />} />
+<Route path="login" element={<Login />} />
+<Route path="unauthorised" element={<Unauthorised/>}/>
+<Route path="/index/:id/verify/:token" element={<EmailVerify />} />
+<Route path="profile" element={<Profile />} />
       
-      {/* <Route path="menu" element={<Menu />} /> */}
-      <Route path="signup" element={<Signup />} />
-      <Route path="student-home" element={<StudentHome />} />
-      <Route path="delivery-partner-home" element={<DeliveryPartnerHome />} />
+{ /* seller routes */}
+      <Route element={<RequireAuth allowedRole="seller"/>}>
       <Route path="seller-home" element={<SellerHome />} />
-      <Route path="login" element={<Login />} />
-      <Route path="/index/:id/verify/:token" element={<EmailVerify />} />
-      <Route path="profile" element={<Profile/>} />
-      <Route path="newproduct" element={<Newproduct/>} />
-      <Route path="myorders" element={<Myorders/>} />
-      <Route path="product/:filterby" element={<Product/>} />
-      <Route path="product-seller/:filterby" element={<ProductSeller/>} />
-      <Route path="myjobs" element={<Myjobs/>} />
+        <Route path="newproduct" element={<Newproduct />} />
+        </Route>
 
-     
-    </Route>
-  )
+
+{ /* student routes */}
+<Route element={<RequireAuth allowedRole="student"/>}>
+        <Route path="student-home" element={<StudentHome />} />
+        <Route path="product/:filterby" element={<Product />} />
+        <Route path="myorders" element={<Myorders />} />
+        <Route path="product-seller/:filterby" element={<ProductSeller />} />
+        </Route>
+
+        { /* delivery-partner routes */}
+        <Route element={<RequireAuth allowedRole="delivery-partner"/>}>
+        <Route path="delivery-partner-home" element={<DeliveryPartnerHome />} />
+        <Route path="myjobs" element={<Myjobs />} />
+        
+        </Route>
+
+        { /* incorrect routes */}
+        <Route path="*" element={<Missing/>} />
+
+        
+</Route>
+    </Routes>
+</AuthProvider>
+</BrowserRouter>
+
+);
+};
+
+ReactDOM.render(
+<Provider store={store}>
+<AppRouter />
+</Provider>,
+document.getElementById("root")
 );
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <Provider store={store}>
-    <RouterProvider router={router} />
-  </Provider>
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-
 
 
 

@@ -6,21 +6,19 @@ import {toast} from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
 import { useDispatch} from "react-redux";
 import { loginRedux } from "../redux/userSlice";
+import useAuth from "../hooks/useAuth";
+
 
 
 const Login = () => {
-    const [showPassword, setShowPassword] = useState(false);
+  const { setAuth } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-  const navigate = useNavigate()  
-  
-
-
+  const navigate = useNavigate() 
   const dispatch = useDispatch()
-
-
 
 
   const handleShowPassword = () => {
@@ -58,7 +56,10 @@ const Login = () => {
         
         dispatch(loginRedux(dataRes))
         setTimeout(() => {
-          console.log(dataRes.data.role);
+          const user = dataRes.data._id
+          const pwd = dataRes.data.password
+          const role = dataRes.data.role
+          setAuth({ user, pwd, role });
           if (dataRes.data.role === 'student') {
             navigate("/student-home")
           }

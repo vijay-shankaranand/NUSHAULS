@@ -13,10 +13,10 @@ const EmailVerify = () => {
 			try {
 				const url = `${process.env.REACT_APP_SERVER_DOMIN}/${param.id}/verify/${param.token}`;
 				const { data } = await axios.get(url);
-				console.log(data);
+				
 				setValidUrl(true);
 			} catch (error) {
-				console.log(error);
+				
 				setValidUrl(false);
 			}
 		};

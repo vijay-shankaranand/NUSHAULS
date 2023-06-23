@@ -22,6 +22,7 @@ export const userSlice = createSlice({
       state.email = action.payload.data.email;
       state.image = action.payload.data.image;
       state.role = action.payload.data.role;
+      localStorage.setItem('authState', JSON.stringify(action.payload.data));
     },
     logoutRedux: (state, action) => {
       state._id = "";
@@ -30,9 +31,28 @@ export const userSlice = createSlice({
       state.email = "";
       state.image = "";
       state.role = "";
+      localStorage.removeItem('authState')
+      
     },
   },
 });
+
+
+export const checkAuthState = () => (dispatch) => {
+  const authState = localStorage.getItem('authState');
+
+  if (authState) {
+    try {
+      const user = JSON.parse(authState);
+      dispatch(loginRedux({ data: user }));
+    } catch (error) {
+      console.error('Error parsing authState:', error);
+      dispatch(logoutRedux());
+    }
+  } else {
+    dispatch(logoutRedux());
+  }
+};
 
 export const { loginRedux ,logoutRedux} = userSlice.actions;
 

@@ -7,6 +7,7 @@ import { setDataProduct } from "../redux/productSlice";
 const StudentHome = () => {
   const productData = useSelector((state=>state.product.productList))
   const homeProductCartList = productData
+  console.log(productData)
   const dispatch = useDispatch();
   useEffect(() => {
     // Fetch product data asynchronously
@@ -22,7 +23,7 @@ const StudentHome = () => {
 
     fetchProductData();
   }, [dispatch]);
-  console.log(homeProductCartList)
+  
 
 
   return (

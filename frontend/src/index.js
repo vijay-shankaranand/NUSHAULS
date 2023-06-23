@@ -24,7 +24,11 @@ import Unauthorised from "./page/Unauthorised";
 import Missing from "./page/Missing";
 import RequireAuth from "./component/RequireAuth";
 
+
+
 const AppRouter = () => {
+  
+
 return (
   <BrowserRouter>
 <AuthProvider>
@@ -40,6 +44,7 @@ return (
 <Route path="profile" element={<Profile />} />
       
 { /* seller routes */}
+
       <Route element={<RequireAuth allowedRole="seller"/>}>
       <Route path="seller-home" element={<SellerHome />} />
         <Route path="newproduct" element={<Newproduct />} />
@@ -58,8 +63,8 @@ return (
         <Route element={<RequireAuth allowedRole="delivery-partner"/>}>
         <Route path="delivery-partner-home" element={<DeliveryPartnerHome />} />
         <Route path="myjobs" element={<Myjobs />} />
-        
         </Route>
+        
 
         { /* incorrect routes */}
         <Route path="*" element={<Missing/>} />

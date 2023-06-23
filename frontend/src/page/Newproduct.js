@@ -106,7 +106,7 @@ const Newproduct = () => {
   const uploadImage = async(e)=>{
     if (e.target.files[0]) {
       const data = await ImagetoBase64(e.target.files[0])
-      console.log(data)
+      
     
 
       setData((preve)=>{
@@ -120,7 +120,7 @@ const Newproduct = () => {
 
   const handleSubmit = async(e)=>{
     e.preventDefault()
-    console.log(data)
+    
 
     const {name,image,category,price} = data
 
@@ -135,7 +135,7 @@ const Newproduct = () => {
   
       const fetchRes =  await fetchData.json()
   
-      console.log(fetchRes)
+      
       toast(fetchRes.message)
 
       setData(()=>{

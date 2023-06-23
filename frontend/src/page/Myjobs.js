@@ -4,7 +4,7 @@ import Ordercard, { getSelectedItems } from "../component/Ordercard";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from 'react-hot-toast';
 import { setDataOrder } from "../redux/orderSlice";
-import { setDataProduct } from "../redux/productSlice";
+
 
 
 const DeliveryPartnerHome = () => {
@@ -31,9 +31,9 @@ const DeliveryPartnerHome = () => {
       .then(response => response.json())
       .then(data => {
         // Handle the response from the server if needed
-        console.log(data);
+        
         toast("Order(s) Delivered")
-        navigate("/delivery-partner-home")
+        navigate("/myjobs")
       })
       .catch(error => {
         // Handle any errors that occurred during the request
@@ -51,33 +51,22 @@ const DeliveryPartnerHome = () => {
     };
   }, []);
 
+
+
+
   useEffect(() => {
-    // Fetch order data asynchronously
-    const fetchOrderData = async () => {
+    const fetchUpdatedOrderData = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/order`);
         const data = await response.json();
         dispatch(setDataOrder(data)); // Dispatch action to update order data in the Redux store
       } catch (error) {
-        console.error("Error fetching order data:", error);
+        console.error("Error fetching updated order data:", error);
       }
     };
 
-    // Fetch product data asynchronously
-    const fetchProductData = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/product`);
-        const data = await response.json();
-        dispatch(setDataProduct(data)); // Dispatch action to update product data in the Redux store
-      } catch (error) {
-        console.error("Error fetching product data:", error);
-      }
-    };
-
-    fetchOrderData();
-    fetchProductData();
-  }, [dispatch]);
-
+    fetchUpdatedOrderData();
+  }, [dispatch, orderData]);
   
   
 

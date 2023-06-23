@@ -4,7 +4,7 @@ import Ordercard, { getSelectedItems } from "../component/Ordercard";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from 'react-hot-toast';
 import { setDataOrder } from "../redux/orderSlice";
-import { setDataProduct } from "../redux/productSlice";
+
 
 
 const DeliveryPartnerHome = () => {
@@ -17,7 +17,7 @@ const DeliveryPartnerHome = () => {
   const fulfillItems = () => {
     const itemIds = getSelectedItems();
     const delivererId = userData._id;
-    console.log(delivererId)
+    
     // Send the selected item IDs to the server for updating in MongoDB
     if (itemIds.length === 0) {
       toast("Please select at least 1 order to accept")
@@ -32,7 +32,7 @@ const DeliveryPartnerHome = () => {
       .then(response => response.json())
       .then(data => {
         // Handle the response from the server if needed
-        console.log(data);
+        
         toast("Order(s) accepted successfully")
         navigate("/myjobs")
       })
@@ -64,19 +64,7 @@ const DeliveryPartnerHome = () => {
       }
     };
 
-    // Fetch product data asynchronously
-    const fetchProductData = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/product`);
-        const data = await response.json();
-        dispatch(setDataProduct(data)); // Dispatch action to update product data in the Redux store
-      } catch (error) {
-        console.error("Error fetching product data:", error);
-      }
-    };
-
     fetchOrderData();
-    fetchProductData();
   }, [dispatch]);
   
 

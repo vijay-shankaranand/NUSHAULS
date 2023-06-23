@@ -9,6 +9,7 @@ const SellerHome = () => {
   const homeProductCartList = productData
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     // Fetch product data asynchronously
     const fetchProductData = async () => {
@@ -23,8 +24,7 @@ const SellerHome = () => {
 
     fetchProductData();
   }, [dispatch]);
-  console.log(userData._id)
-  console.log(homeProductCartList.filter((product) => product.user === userData._id))
+  
   
   
   return (

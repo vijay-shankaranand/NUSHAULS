@@ -19,7 +19,7 @@ function Signup() {
         image: ""
     });
     
-    console.log(data)
+    
     const handleShowPassword = () => {
         setShowPassword((preve) => !preve);
     };
@@ -53,7 +53,7 @@ function Signup() {
 
     }
     
-    console.log(process.env.REACT_APP_SERVER_DOMIN)
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { firstName, email, password, confirmPassword, role , image } = data;

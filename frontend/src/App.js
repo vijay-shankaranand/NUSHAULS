@@ -3,16 +3,21 @@ import "./App.css";
 import Header from "./component/Header";
 import { Outlet } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
 import { setDataProduct } from "./redux/productSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { setDataOrder } from "./redux/orderSlice"
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { checkAuthState } from './redux/userSlice';
 
 
 function App() {
   const dispatch = useDispatch()
   const productData = useSelector((state)=>state.product)
   const orderData = useSelector((state)=>state.order)
+  const userData = useSelector((state)=> state.user)
+
+  console.log(userData)
  
   useEffect(()=>{
     (async()=>{
@@ -29,6 +34,13 @@ function App() {
       dispatch(setDataOrder(resData))
     })()
   },[])
+
+
+  useEffect(() => {
+    dispatch(checkAuthState());
+  }, [dispatch]);
+
+  
 
   return (
     <>

@@ -31,7 +31,7 @@ data.timePlaced = new Date().toLocaleTimeString()
 data.timeState = new Date().toLocaleTimeString()
 data.user = userData._id;
 data.deliveryFee = deliveryEst;
-console.log(data)
+
 
 const options = [
     { label: '09:00', value: '09:00', time: '08:00' },
@@ -59,7 +59,7 @@ const handleOnChange = (e)=>{
 const handleSubmit = async(e)=>{
   e.preventDefault()
 
-console.log(data)
+
 
   const {residence, timeSlot} = data
 
@@ -74,7 +74,7 @@ console.log(data)
 
     const fetchRes =  await fetchData.json()
 
-    console.log(fetchRes)
+    
     toast(fetchRes.message)
 
     setData(()=>{
@@ -86,7 +86,7 @@ console.log(data)
         timeState : "",
         residence: "",
         user : "",
-        deliverer:""
+        deliverer: ""
       }
     })
     navigate("/myorders");

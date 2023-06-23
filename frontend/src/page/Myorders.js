@@ -9,6 +9,9 @@ const Myorders = () => {
   const orderData = useSelector((state) => state.order.orderList);
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  console.log(productData)
+  console.log(orderData)
+  console.log(userData)
 
   useEffect(() => {
     // Fetch order data asynchronously

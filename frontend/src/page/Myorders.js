@@ -1,17 +1,41 @@
-import React from "react";
-
-import OrdercardStudent from "../component/OrdercardStudent"
-import { useSelector } from "react-redux";
-
+import React, { useEffect } from "react";
+import OrdercardStudent from "../component/OrdercardStudent";
+import { useSelector, useDispatch } from "react-redux";
+import { setDataOrder } from "../redux/orderSlice";
+import { setDataProduct } from "../redux/productSlice";
 
 const Myorders = () => {
-  const productData = useSelector((state=>state.product.productList))
-  const orderData = useSelector((state=>state.order.orderList))
-  const userData = useSelector((state=>state.user))
-  
+  const productData = useSelector((state) => state.product.productList);
+  const orderData = useSelector((state) => state.order.orderList);
+  const userData = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  console.log(productData)
-  console.log(orderData)
+  useEffect(() => {
+    // Fetch order data asynchronously
+    const fetchOrderData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/order`);
+        const data = await response.json();
+        dispatch(setDataOrder(data)); // Dispatch action to update order data in the Redux store
+      } catch (error) {
+        console.error("Error fetching order data:", error);
+      }
+    };
+
+    // Fetch product data asynchronously
+    const fetchProductData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/product`);
+        const data = await response.json();
+        dispatch(setDataProduct(data)); // Dispatch action to update product data in the Redux store
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchOrderData();
+    fetchProductData();
+  }, [dispatch]);
 
   
   return (

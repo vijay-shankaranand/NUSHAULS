@@ -43,6 +43,7 @@ return (
       <Route element={<RequireAuth allowedRole="seller"/>}>
       <Route path="seller-home" element={<SellerHome />} />
         <Route path="newproduct" element={<Newproduct />} />
+        <Route path="product-seller/:filterby" element={<ProductSeller />} />
         </Route>
 
 
@@ -51,7 +52,6 @@ return (
         <Route path="student-home" element={<StudentHome />} />
         <Route path="product/:filterby" element={<Product />} />
         <Route path="myorders" element={<Myorders />} />
-        <Route path="product-seller/:filterby" element={<ProductSeller />} />
         </Route>
 
         { /* delivery-partner routes */}

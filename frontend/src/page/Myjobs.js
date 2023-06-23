@@ -1,14 +1,18 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Ordercard, { getSelectedItems } from "../component/Ordercard";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from 'react-hot-toast';
+import { setDataOrder } from "../redux/orderSlice";
+import { setDataProduct } from "../redux/productSlice";
+
 
 const DeliveryPartnerHome = () => {
   const navigate = useNavigate();
   const productData = useSelector(state => state.product.productList);
   const orderData = useSelector(state => state.order.orderList);
   const userData = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
   const fulfillItems = () => {
     const itemIds = getSelectedItems();
@@ -46,6 +50,35 @@ const DeliveryPartnerHome = () => {
       fulfillButton.removeEventListener("click", fulfillItems);
     };
   }, []);
+
+  useEffect(() => {
+    // Fetch order data asynchronously
+    const fetchOrderData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/order`);
+        const data = await response.json();
+        dispatch(setDataOrder(data)); // Dispatch action to update order data in the Redux store
+      } catch (error) {
+        console.error("Error fetching order data:", error);
+      }
+    };
+
+    // Fetch product data asynchronously
+    const fetchProductData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/product`);
+        const data = await response.json();
+        dispatch(setDataProduct(data)); // Dispatch action to update product data in the Redux store
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchOrderData();
+    fetchProductData();
+  }, [dispatch]);
+
+  
   
 
   

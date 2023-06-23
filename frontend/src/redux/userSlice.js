@@ -14,7 +14,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     loginRedux: (state, action) => {
-      console.log(action.payload.data);
+      
       //   state.user = action.payload.data;
       state._id = action.payload.data._id;
       state.firstName = action.payload.data.firstName;

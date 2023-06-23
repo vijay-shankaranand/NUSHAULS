@@ -48,7 +48,7 @@ const Login = () => {
       })
 
       const dataRes = await fetchData.json()
-      console.log(dataRes)
+      
       
       toast(dataRes.message)
       

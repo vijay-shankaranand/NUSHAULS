@@ -6,7 +6,7 @@ const RequireAuth = ({ allowedRole }) => {
     const { auth } = useAuth();
     const location = useLocation();
     const localData = localStorage.getItem("authState")
-    console.log(localData)
+    
 
     const { _id, role } = JSON.parse(localData || "{}");
 

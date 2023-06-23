@@ -1,14 +1,28 @@
-import React from "react";
-
+import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
-
 import Homecard from "../component/Homecard"
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setDataProduct } from "../redux/productSlice";
 
 const SellerHome = () => {
   const productData = useSelector((state=>state.product.productList))
   const homeProductCartList = productData
   const userData = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Fetch product data asynchronously
+    const fetchProductData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/product`);
+        const data = await response.json();
+        dispatch(setDataProduct(data)); // Dispatch action to update product data in the Redux store
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchProductData();
+  }, [dispatch]);
   console.log(userData._id)
   console.log(homeProductCartList.filter((product) => product.user === userData._id))
   

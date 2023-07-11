@@ -153,6 +153,17 @@ app.get("/product", async (req,res) => {
   res.send(JSON.stringify(data))
 })
 
+app.post("/deleteProduct/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await productModel.deleteOne({ _id: id });
+    res.send({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while deleting the product" });
+  }
+});
+
 
 //orders section
 

@@ -16,8 +16,6 @@ function App() {
   const productData = useSelector((state)=>state.product)
   const orderData = useSelector((state)=>state.order)
   const userData = useSelector((state)=> state.user)
-
-  console.log(userData)
  
   useEffect(()=>{
     (async()=>{

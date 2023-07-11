@@ -1,63 +1,118 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteProduct } from "../redux/productSlice";
 
 const ProductSeller = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
- 
-const productData = useSelector((state=>state.product.productList))
+  const productData = useSelector((state) => state.product.productList);
+  const { filterby } = useParams();
 
-const {filterby} = useParams()
+  const handleDelete = async () => {
+    const data = {
+      productId: filterby,
+    };
 
-    return (
-      
-        <div className="">
-          
-          <div className="m-auto w-full text-center p-10 bg-amber-200">
-          <h2 className="text-4xl font-bold">Product <span className="text-amber-500">Info</span></h2>
-          </div>
-          
-        <div className="p-2 md:p-4">
+    try {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/deleteProduct/${filterby}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        // Handle successful deletion
+        // Dispatch an action to remove the deleted product from the Redux store
+        dispatch(deleteProduct(filterby));
+        // Navigate to the desired page
+        navigate("/seller-home");
+      } else {
+        // Handle error
+        console.error("Error deleting product");
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
+  const handleEdit = () => {
+    // Navigate to the edit page with the product ID
+    navigate(`/product-seller/${filterby}/edit`);
+  };
+
+  return (
+    <div className="">
+      <div className="m-auto w-full text-center p-10 bg-amber-200">
+        <h2 className="text-4xl font-bold">
+          Product <span className="text-amber-500">Info</span>
+        </h2>
+      </div>
+
+      <div className="p-2 md:p-4">
         <div className="w-full max-w-4xl m-auto p-5">
           <div className="w-[400px] h-[500px] w-full pb-5">
             <img
-              src={productData[0] && productData.filter((el) => el._id === filterby)[0].image}
-              className="hover:scale-105 transition-all h-full" alt="loading"
+              src={
+                productData[0] &&
+                productData.filter((el) => el._id === filterby)[0].image
+              }
+              className="hover:scale-105 transition-all h-full"
+              alt="loading"
             />
           </div>
           <div className="flex flex-col gap-1">
             <h3 className="font-semibold text-slate-600  capitalize text-2xl md:text-4xl">
-              {productData[0] && productData.filter((el) => el._id === filterby)[0].name}
+              {productData[0] &&
+                productData.filter((el) => el._id === filterby)[0].name}
             </h3>
-            <p className=" text-slate-500  font-medium text-2xl">{productData[0] && productData.filter((el) => el._id === filterby)[0].category}</p>
+            <p className=" text-slate-500  font-medium text-2xl">
+              {productData[0] &&
+                productData.filter((el) => el._id === filterby)[0].category}
+            </p>
             <p className=" font-bold md:text-2xl">
               <span className="text-amber-500 ">$</span>
-              <span>{productData[0] && productData.filter((el) => el._id === filterby)[0].price}</span>
-            </p>   
+              <span>
+                {productData[0] &&
+                  productData.filter((el) => el._id === filterby)[0].price}
+              </span>
+            </p>
             <div>
               <p className="text-slate-600 font-medium">Description : </p>
-              <p>{productData[0] && productData.filter((el) => el._id === filterby)[0].description}</p>
+              <p>
+                {productData[0] &&
+                  productData.filter((el) => el._id === filterby)[0]
+                    .description}
+              </p>
             </div>
             <div>
               <p className="text-slate-600 font-medium">Region : </p>
-              <p>{productData[0] && productData.filter((el) => el._id === filterby)[0].region}</p>
+              <p>
+                {productData[0] &&
+                  productData.filter((el) => el._id === filterby)[0].region}
+              </p>
             </div>
           </div>
           <div className="flex gap-3 pt-2 pt-3">
-          <button className="bg-rose-600 hover:bg-rose-800 text-white font-bold py-2 px-4 rounded">Delete</button>
-          <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Edit</button>  
+            <button
+              className="bg-rose-600 hover:bg-rose-800 text-white font-bold py-2 px-4 rounded"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+            <button
+              className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+              onClick={handleEdit}
+            >
+              Edit
+            </button>
           </div>
         </div>
-        
       </div>
+    </div>
+  );
+};
 
-      
-      
-      </div>
-    
-    )
-  
-}
-
-export default ProductSeller
+export default ProductSeller;

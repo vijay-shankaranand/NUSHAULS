@@ -11,14 +11,9 @@ export const productSlice = createSlice({
     setDataProduct: (state, action) => {
       state.productList = [...action.payload];
     },
-    deleteProduct: (state, action) => {
-      const productId = action.payload;
-      console.log(productId)
-      state.productList = state.productList.filter((product) => product._id !== productId);
-    },
   },
 });
 
-export const { setDataProduct, deleteProduct } = productSlice.actions;
+export const { setDataProduct } = productSlice.actions;
 
 export default productSlice.reducer;

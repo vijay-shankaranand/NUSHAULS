@@ -1,14 +1,113 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { deleteProduct } from "../redux/productSlice";
+import { useSelector } from "react-redux";
+import { toast } from 'react-hot-toast'
+import {BsCloudUpload} from "react-icons/bs"
+import { ImagetoBase64 } from '../utility/ImagetoBase64'
 
 const ProductSeller = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const productData = useSelector((state) => state.product.productList);
   const { filterby } = useParams();
+
+
+  const [updateStatus, setUpdateStatus] = useState("idle");
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [editedProduct, setEditedProduct] = useState({
+    name: "",
+    image:"",
+    category: "",
+    price: "",
+    description: "",
+    region: "",
+  });
+
+  const towns = [
+    "Ang Mo Kio",
+    "Bedok",
+    "Bishan",
+    "Boon Lay",
+    "Bukit Batok",
+    "Bukit Merah",
+    "Bukit Panjang",
+    "Bukit Timah",
+    "Central Water Catchment",
+    "Changi",
+    "Changi Bay",
+    "Choa Chu Kang",
+    "Clementi",
+    "Downtown Core",
+    "Geylang",
+    "Hougang",
+    "Jurong East",
+    "Jurong West",
+    "Kallang",
+    "Lim Chu Kang",
+    "Mandai",
+    "Marina East",
+    "Marina South",
+    "Marine Parade",
+    "Museum",
+    "Newton",
+    "Novena",
+    "Orchard",
+    "Outram",
+    "Pasir Ris",
+    "Paya Lebar",
+    "Pioneer",
+    "Punggol",
+    "Queenstown",
+    "River Valley",
+    "Rochor",
+    "Seletar",
+    "Sembawang",
+    "Sengkang",
+    "Serangoon",
+    "Simpang",
+    "Singapore River",
+    "Southern Islands",
+    "Sungei Kadut",
+    "Tampines",
+    "Tanglin",
+    "Tengah",
+    "Toa Payoh",
+    "Tuas",
+    "Western Islands",
+    "Western Water Catchment",
+    "Woodlands",
+    "Yishun"
+  ]
+
+  const handleCurrency = (e) => {
+    const {name,value} = e.target
+    // Regex to match only numeric values with up to 2 decimal places
+    const regex = /^\d*\.?\d{0,2}$/;
+    if (regex.test(value) || value === '') {
+      setEditedProduct((preve)=>{
+        return{
+          ...preve,
+          [name] : value
+        }
+    })
+    }
+  };
+
+  const openEditPopup = () => {
+    setIsEditPopupOpen(true);
+  };
+
+  const closeEditPopup = () => {
+    setIsEditPopupOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedProduct((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleDelete = async () => {
     const data = {
@@ -23,26 +122,60 @@ const ProductSeller = () => {
         },
       });
 
-      if (response.ok) {
-        // Handle successful deletion
-        // Dispatch an action to remove the deleted product from the Redux store
-        dispatch(deleteProduct(filterby));
-        // Navigate to the desired page
+      const fetchRes = await response.json()
+
+      toast(fetchRes.message)
+
         navigate("/seller-home");
-      } else {
-        // Handle error
-        console.error("Error deleting product");
-      }
+    
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
-
-  const handleEdit = () => {
-    // Navigate to the edit page with the product ID
-    navigate(`/product-seller/${filterby}/edit`);
+  const handleProductUpdate = async () => {
+    setUpdateStatus("loading");
+  
+    try {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/editProduct/${filterby}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedProduct),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update product.");
+      }
+  
+      setUpdateStatus("success");
+      toast.success("Product updated successfully");
+      navigate("/seller-home");
+    } catch (error) {
+      console.error("Error updating product:", error);
+      setUpdateStatus("error");
+    }
   };
 
+  const handleEdit = () => {
+    openEditPopup();
+  };
+
+
+  const uploadImage = async(e)=>{
+    if (e.target.files[0]) {
+      const data = await ImagetoBase64(e.target.files[0])
+      
+    
+
+      setEditedProduct((preve)=>{
+        return{
+          ...preve,
+          image : data
+        }
+      })
+    }
+  }
   return (
     <div className="">
       <div className="m-auto w-full text-center p-10 bg-amber-200">
@@ -111,6 +244,115 @@ const ProductSeller = () => {
           </div>
         </div>
       </div>
+      {isEditPopupOpen && (
+  <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-500 bg-opacity-50">
+    <div className="bg-white p-4">
+      <h2 className="text-2xl mb-4 font-bold">Edit Product</h2>
+      <form>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-2">
+            <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value={editedProduct.name}
+              onChange={handleInputChange}
+              className="border border-gray-400 rounded px-3 py-2 w-full"
+            />
+          </div>
+          <div className="col-span-2">
+            <label htmlFor='image' className="block text-gray-700 font-bold mb-2">
+              Image
+              <div className='h-60 w-full rounded flex items-center justify-center cursor-pointer border border-gray-400 rounded'>
+                {editedProduct.image ? (
+                  <img src={editedProduct.image} className="h-full" alt=""/>
+                ) : (
+                  <span className='text-5xl'><BsCloudUpload/></span>
+                )}
+                <input type={"file"} accept="image/*" id="image" onChange={uploadImage} className="hidden"/>
+              </div>
+            </label>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="category" className="block text-gray-700 font-bold mb-2">
+              Category
+            </label>
+
+            <select className='border border-gray-400 rounded px-3 py-2 w-full' id='category' name='category' onChange={handleInputChange} value={editedProduct.category}>
+          <option value='' selected disabled>Select Category</option>
+          <option value={"Edibles"}>Food & Snacks</option>
+          <option value={"Household"}>Household</option>
+          <option value={"Medical"}>Medical</option>
+          <option value={"Misc"}>Misc</option>
+        </select>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="price" className="block text-gray-700 font-bold mb-2">
+              Price
+            </label>
+            <input
+              type="text"
+              name="price"
+              id="price"
+              value={editedProduct.price}
+              onChange={handleCurrency}
+              className="border border-gray-400 rounded px-3 py-2 w-full"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
+              Description
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              value={editedProduct.description}
+              onChange={handleInputChange}
+              className="border border-gray-400 rounded px-3 py-2 w-full"
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="region" className="block text-gray-700 font-bold mb-2">
+              Region
+            </label>
+            
+
+<select className='border border-gray-400 rounded px-3 py-2 w-full' id='region' name='region' onChange={handleInputChange} value={editedProduct.region}>
+          <option value='' selected disabled>Select Region</option>
+          {towns.map((region) => (
+          <option key={region} value={region}>
+            {region}
+          </option>
+        ))}
+        </select>
+
+            
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <button
+            type="button"
+            className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2"
+            onClick={handleProductUpdate}
+            disabled={updateStatus === "loading"}
+          >
+            {updateStatus === "loading" ? "Updating..." : "Save"}
+          </button>
+          <button
+            type="button"
+            className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded"
+            onClick={closeEditPopup}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 };

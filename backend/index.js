@@ -164,6 +164,26 @@ app.post("/deleteProduct/:id", async (req, res) => {
   }
 });
 
+app.put('/editProduct/:productId', (req, res) => {
+  const productId = req.params.productId;
+  const updatedProductData = req.body;
+
+  // Update the product in the database based on the productId and updatedProductData
+  // Your implementation logic goes here...
+
+  // For example, you can use a database query or ORM to update the product
+  productModel.findByIdAndUpdate(productId, updatedProductData, { new: true })
+    .then(updatedProduct => {
+      // Send a response indicating the success of the update operation
+      res.json({ success: true, message: 'Product updated successfully' });
+    })
+    .catch(error => {
+      console.error('Error updating product:', error);
+      // Send a response indicating the failure of the update operation
+      res.status(500).json({ success: false, message: 'Failed to update product' });
+    });
+});
+
 
 //orders section
 

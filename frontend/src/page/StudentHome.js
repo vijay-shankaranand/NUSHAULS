@@ -35,11 +35,6 @@ const StudentHome = () => {
         </div>
 
         <div className="flex p-10">
-        <Link to="/myorders">
-          <button className="absolute right-20 bg-amber-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
-            My Orders
-          </button>
-          </Link>
           
         </div>
 

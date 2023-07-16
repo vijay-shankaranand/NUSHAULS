@@ -17,6 +17,12 @@ const DeliveryPartnerHome = () => {
   const fulfillItems = () => {
     const itemIds = getSelectedItems();
     const delivererId = userData._id;
+    const delivererName = userData.firstName;
+    const delivererNum = userData.number
+
+    if (userData.number === undefined) {
+      toast("Please fill up all additional details under My Profile section to accept orders!")
+    } else {
     
     // Send the selected item IDs to the server for updating in MongoDB
     if (itemIds.length === 0) {
@@ -27,7 +33,7 @@ const DeliveryPartnerHome = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ itemIds, delivererId })
+      body: JSON.stringify({ itemIds, delivererId, delivererName, delivererNum })
     })
       .then(response => response.json())
       .then(data => {
@@ -41,6 +47,7 @@ const DeliveryPartnerHome = () => {
         console.error(error);
       });
     }
+  }
   };
 
   useEffect(() => {
@@ -80,9 +87,6 @@ const DeliveryPartnerHome = () => {
             
             <button id="fulfillButton" type="button" className="absolute right-20 bg-amber-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Accept</button>
 					  
-            <Link to="/myjobs">
-            <button className="absolute left-20 bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">My jobs</button>
-					  </Link>
             
           </div>
           
@@ -104,6 +108,9 @@ const DeliveryPartnerHome = () => {
                 residence= {el.residence}
                 deliveryFee= {el.deliveryFee}
                 user = {el.user}
+                address = {productData[0] && productData.filter((product) => product._id === el.product)[0].address}
+                number = {productData[0] && productData.filter((product) => product._id === el.product)[0].number}
+                studentNumber = {el.studentNumber}
                 />
               )
             })

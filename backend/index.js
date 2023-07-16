@@ -32,7 +32,10 @@ const userSchema = mongoose.Schema({
         confirmPassword: String,
         role: String,
         image: String,
-        verified: { type:Boolean, default : false}
+        verified: { type:Boolean, default : false},
+        address: String,
+        number: String,
+        region: String
 });
 
 const userModel = mongoose.model("user", userSchema);
@@ -66,6 +69,33 @@ app.post("/signup", async(req,res)=>{
       }
     
 })
+
+app.put("/updateUser", async (req, res) => {
+  const { _id, address, number , region} = req.body;
+  console.log(address)
+  try {
+    // Find the user in the database based on their ID or any other identifier
+    const user = await userModel.findById({_id});
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update the user data
+    user.address = address;
+    user.number = number;
+    user.region = region;
+
+    // Save the updated user data to the database
+    await user.save();
+
+    // Send a response indicating the successful update
+    res.json({ message: "User data updated successfully" });
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    res.status(500).json({ error: "An error occurred while updating user data" });
+  }
+});
 
 app.get("/:id/verify/:token/", async (req, res) => {
 	try {
@@ -101,7 +131,10 @@ app.post("/login", async(req, res)=> {
             email: result.email,
             role: result.role,
             image: result.image,
-            verified: result.verified
+            verified: result.verified,
+            address: result.address,
+            number: result.number,
+            region:result.region
           };
           console.log(dataSend)
           if (dataSend.verified == false) {
@@ -134,7 +167,9 @@ const schemaProduct = mongoose.Schema({
     description : String,
     user : String,
     region : String,
-    status: String
+    status: String,
+    address: String,
+    number: String
 });
 
 const productModel = mongoose.model("product", schemaProduct)
@@ -197,7 +232,10 @@ const schemaOrder = mongoose.Schema({
   residence: String,
   deliveryFee: String,
   user : String,
-  deliverer: String
+  deliverer: String,
+  studentNumber: String,
+  delivererNum: String,
+  delivererName: String
 })
 
 const orderModel = mongoose.model("order", schemaOrder)
@@ -241,12 +279,12 @@ app.get("/order", async (req, res) => {
 });
 
 app.post("/orderAccept" , async (req, res) => {
-  const { itemIds, delivererId } = req.body;
+  const { itemIds, delivererId, delivererName, delivererNum } = req.body;
   console.log(delivererId)
   try {
     await orderModel.updateMany(
       { _id: { $in: itemIds } },
-      { $set: { state: 'Accepted' , deliverer: delivererId }}
+      { $set: { state: 'Accepted' , deliverer: delivererId, delivererName: delivererName, delivererNum: delivererNum }}
     );
     res.json({ message: 'Item(s) accepted successfully' });
   } catch (error) {

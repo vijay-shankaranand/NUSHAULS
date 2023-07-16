@@ -17,66 +17,16 @@ const Newproduct = () => {
     description : "",
     user : "",
     region: "",
-    status: "Available"
+    status: "Available",
+    number:"",
+    address:""
   })
 
   data.user = userData._id
-
-  const towns = [
-    "Ang Mo Kio",
-    "Bedok",
-    "Bishan",
-    "Boon Lay",
-    "Bukit Batok",
-    "Bukit Merah",
-    "Bukit Panjang",
-    "Bukit Timah",
-    "Central Water Catchment",
-    "Changi",
-    "Changi Bay",
-    "Choa Chu Kang",
-    "Clementi",
-    "Downtown Core",
-    "Geylang",
-    "Hougang",
-    "Jurong East",
-    "Jurong West",
-    "Kallang",
-    "Lim Chu Kang",
-    "Mandai",
-    "Marina East",
-    "Marina South",
-    "Marine Parade",
-    "Museum",
-    "Newton",
-    "Novena",
-    "Orchard",
-    "Outram",
-    "Pasir Ris",
-    "Paya Lebar",
-    "Pioneer",
-    "Punggol",
-    "Queenstown",
-    "River Valley",
-    "Rochor",
-    "Seletar",
-    "Sembawang",
-    "Sengkang",
-    "Serangoon",
-    "Simpang",
-    "Singapore River",
-    "Southern Islands",
-    "Sungei Kadut",
-    "Tampines",
-    "Tanglin",
-    "Tengah",
-    "Toa Payoh",
-    "Tuas",
-    "Western Islands",
-    "Western Water Catchment",
-    "Woodlands",
-    "Yishun"
-  ]
+  data.region = userData.region
+  data.number = userData.number
+  data.address = userData.address
+  
 
   const handleOnChange = (e)=>{
     const {name,value} = e.target
@@ -121,7 +71,10 @@ const Newproduct = () => {
 
   const handleSubmit = async(e)=>{
     e.preventDefault()
-    
+  
+    if (userData.region === undefined || userData.address === undefined || userData.number === undefined ) {
+      toast("Please fill up all additional details under My Profile section before uploading!")
+    } else {
 
     const {name,image,category,price} = data
 
@@ -148,7 +101,10 @@ const Newproduct = () => {
           description : "",
           user : '',
           region: '',
-          status: ""
+          status: "",
+          address: "",
+          number:""
+          
         }
       })
       navigate("/seller-home");
@@ -156,6 +112,7 @@ const Newproduct = () => {
     else{
       toast("Enter required Fields")
     }
+  }
     
   }
 
@@ -189,17 +146,6 @@ const Newproduct = () => {
            <input type={"file"} accept="image/*" id="image" onChange={uploadImage} className="hidden"/>
         </div>
         </label>
-
-        <label className="pt-3" htmlFor='Region'>Region</label>
-        <select className='bg-slate-200 p-2 my-2' id='region' name='region' onChange={handleOnChange} value={data.region}>
-          <option value='' selected disabled>Select Region</option>
-          {towns.map((region) => (
-          <option key={region} value={region}>
-            {region}
-          </option>
-        ))}
-        </select>
-        
 
         <label htmlFor='price' className='my-1'>Price</label>
         <input type={"text"} className='bg-slate-200 p-1 my-1' name='price' onChange={handleCurrency} value={data.price} placeholder="$"/>

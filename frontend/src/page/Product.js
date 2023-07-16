@@ -20,7 +20,8 @@ const [data,setData] = useState({
   residence: "",
   deliveryFee: "",
   user : "",
-  deliverer:""
+  deliverer:"",
+  studentNumber:""
 })
 
 const deliveryEst = 1.00;
@@ -31,6 +32,8 @@ data.timePlaced = new Date().toLocaleTimeString()
 data.timeState = new Date().toLocaleTimeString()
 data.user = userData._id;
 data.deliveryFee = deliveryEst;
+data.residence = userData.address;
+data.studentNumber = userData.number;
 
 
 const options = [
@@ -39,7 +42,7 @@ const options = [
     { label: '15:00', value: '15:00', time: '14:00' },
     { label: '18:00', value: '18:00', time: '17:00' },
     { label: '21:00', value: '21:00', time: '20:00' },
-    { label: '24:00', value: '24:00', time: '24:00' },
+    { label: '24:00', value: '24:00', time: '23:00' },
   ];
 
 const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -59,11 +62,13 @@ const handleOnChange = (e)=>{
 const handleSubmit = async(e)=>{
   e.preventDefault()
 
+  if (userData.address === undefined || userData.number === undefined) {
+    toast("Please fill up all additional details under My Profile section to start ordering!")
+  } else {
 
+  const {timeSlot} = data
 
-  const {residence, timeSlot} = data
-
-  if(residence , timeSlot){
+  if(timeSlot){
     const fetchData = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/uploadOrder`,{
       method : "POST",
       headers : {
@@ -86,7 +91,8 @@ const handleSubmit = async(e)=>{
         timeState : "",
         residence: "",
         user : "",
-        deliverer: ""
+        deliverer: "",
+        studentNumber: ""
       }
     })
     navigate("/myorders");
@@ -94,6 +100,7 @@ const handleSubmit = async(e)=>{
   else{
     toast("Enter Required Fields")
   }
+}
   
 }
     return (
@@ -146,32 +153,11 @@ const handleSubmit = async(e)=>{
         </option>
       ))} 
     </select>
-    <label for="residence" className="text-slate-600 font-medium">Residence:</label> 
-    <select className="bg-slate-100 border-solid border-2 rounded border-slate-600 p-2"
-    name="residence"
-    id="residence" 
-    value={data.residence}
-    onChange={handleOnChange}> 
-    <option value="" selected disabled>Please Select</option>
-    <option value="KEVII">King Edward VII Hall</option>
-    <option value="PGPR">Prince George's Park Residence</option>
-    <option value="Temasek">Temasek Hall</option>
-    <option value="Eusoff">Eusoff Hall</option>
-    <option value="Raffles">Raffles Hall</option>
-    <option value="Sheares">Sheares Hall</option>
-    <option value="KentRidge">Kent Ridge Hall</option>
-    <option value="UTR">UTown Residence</option>
-    <option value="Tembusu">Tembusu College</option>
-    <option value="CAPT">CAPT College</option>
-    <option value="Cinnamon">Cinnamon College</option>
-    <option value="RC4">RC4 College</option>
-
-    </select>
     
     <div className="font-bold text-3xl pt-5">Grand Total: <span className="text-amber-500 ">$</span>{productData[0] && Number(productData.filter((el) => el._id === filterby)[0].price) + deliveryEst}</div>
 
             <div className="flex gap-3 pt-3">
-          <button className="bg-yellow-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Place Order</button>
+          <button className="bg-amber-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Place Order</button>
           
           </div>
           </div>

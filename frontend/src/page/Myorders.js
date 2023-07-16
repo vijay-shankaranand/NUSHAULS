@@ -112,6 +112,9 @@ const navigate = useNavigate();
                 residence= {el.residence}
                 deliveryFee= {el.deliveryFee}
                 user = {el.user}
+                address = {productData[0] && productData.filter((product) => product._id === el.product)[0].address}
+                number = {productData[0] && productData.filter((product) => product._id === el.product)[0].number}
+                delivererNumber = {el.delivererNum}
                 />
               )
             })

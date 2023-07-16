@@ -21,7 +21,6 @@ const ProductSeller = () => {
     category: "",
     price: "",
     description: "",
-    region: "",
     status:""
   });
 
@@ -328,23 +327,7 @@ const ProductSeller = () => {
               className="border border-gray-400 rounded px-3 py-2 w-full"
             ></textarea>
           </div>
-          <div className="mb-4">
-            <label htmlFor="region" className="block text-gray-700 font-bold mb-2">
-              Region
-            </label>
-            
-
-<select className='border border-gray-400 rounded px-3 py-2 w-full' id='region' name='region' onChange={handleInputChange} value={editedProduct.region}>
-          <option value='' selected disabled>Select Region</option>
-          {towns.map((region) => (
-          <option key={region} value={region}>
-            {region}
-          </option>
-        ))}
-        </select>
-
-            
-          </div>
+          
         </div>
         <div className="flex justify-end">
           <button

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -23,8 +23,61 @@ const [data,setData] = useState({
   deliverer:"",
   studentNumber:""
 })
+console.log(productData)
+const sellerLocation = productData.find((product) => product._id === filterby)?.address;
+console.log(sellerLocation)
+const buyerLocation = "National University of Singapore, 21 Lower Kent Ridge Road, Singapore 119077";
 
-const deliveryEst = 1.00;
+const [deliveryEst, setDeliveryEst] = useState(0);
+
+const calculateDistance = () => {
+  if (!sellerLocation) return;
+  const geocoder = new window.google.maps.Geocoder();
+  const origin = sellerLocation;
+  const destination = buyerLocation;
+  
+
+  geocoder.geocode({ address: origin }, (results, status) => {
+    if (status === 'OK' && results.length > 0) {
+      const originLatLng = results[0].geometry.location;
+      geocoder.geocode({ address: destination }, (results, status) => {
+        if (status === 'OK' && results.length > 0) {
+          const destinationLatLng = results[0].geometry.location;
+          const distanceService = new window.google.maps.DistanceMatrixService();
+          distanceService.getDistanceMatrix(
+            {
+              origins: [originLatLng],
+              destinations: [destinationLatLng],
+              travelMode: 'DRIVING',
+            },
+            (response, status) => {
+              if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
+                const distanceValue = response.rows[0].elements[0].distance.value;
+                const distanceInKm = distanceValue / 1000;
+                const fee = distanceInKm * 0.4;
+                setDeliveryEst(fee);
+              } else {
+                toast.error('Error calculating distance');
+              }
+            }
+          );
+        } else {
+          toast.error('Error geocoding destination');
+        }
+      });
+    } else {
+      toast.error('Error geocoding origin');
+    }
+  });
+};
+
+useEffect(() => {
+  calculateDistance();
+}, [sellerLocation]);
+
+if (!sellerLocation) {
+  return <div>Loading...</div>; 
+}
 
 data.product = filterby;
 data.state = "Available"
@@ -129,7 +182,9 @@ const handleSubmit = async(e)=>{
               <span>{productData[0] && productData.filter((el) => el._id === filterby)[0].price}</span>
             </p>
             <div className="font-bold text-l">
-              <p>Delivery fee: <span className="text-amber-500 ">$</span>{deliveryEst}</p>    
+            <p>
+          Delivery fee: <span className="text-amber-500">$</span>{deliveryEst.toFixed(2)} (Distance : {deliveryEst/0.4} km)
+        </p>     
             </div>   
             <div>
               <p className="text-slate-600 font-medium">Description : </p>
@@ -154,7 +209,7 @@ const handleSubmit = async(e)=>{
       ))} 
     </select>
     
-    <div className="font-bold text-3xl pt-5">Grand Total: <span className="text-amber-500 ">$</span>{productData[0] && Number(productData.filter((el) => el._id === filterby)[0].price) + deliveryEst}</div>
+    <div className="font-bold text-3xl pt-5">Grand Total: <span className="text-amber-500 ">$</span>{productData[0] && Number(productData.filter((el) => el._id === filterby)[0].price) + deliveryEst.toFixed(2)}</div>
 
             <div className="flex gap-3 pt-3">
           <button className="bg-amber-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Place Order</button>
@@ -165,7 +220,7 @@ const handleSubmit = async(e)=>{
         <div className="pt-10">
             <div><span className="text-red-600">*</span>All products are cash on delivery</div>
             <div><span className="text-red-600">*</span>Delivery slot closes 1hr in advance to faciliate delivery process</div>
-            <div><span className="text-red-600">*</span>Fare calculated based on approx distance (temporarily $1)</div>
+            <div><span className="text-red-600">*</span>Fare calculated based on approx distance ($0.4/km)</div>
         </div>
       </div>
       </form>

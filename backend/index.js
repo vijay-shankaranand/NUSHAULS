@@ -133,7 +133,8 @@ const schemaProduct = mongoose.Schema({
     price : String,
     description : String,
     user : String,
-    region : String
+    region : String,
+    status: String
 });
 
 const productModel = mongoose.model("product", schemaProduct)
@@ -156,7 +157,7 @@ app.get("/product", async (req,res) => {
 app.post("/deleteProduct/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await productModel.deleteOne({ _id: id });
+    await productModel.updateOne({ _id: id }, { status: "Deleted" });
     res.send({ message: "Product deleted successfully" });
   } catch (error) {
     console.error(error);
@@ -266,6 +267,18 @@ app.post("/orderDeliver" , async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while accepted items' });
   }
-}) 
+})
+
+app.post('/cancelOrder', async (req, res) => {
+  const { itemIds } = req.body
+  console.log(itemIds)
+  try {
+    await orderModel.deleteMany({ _id: { $in: itemIds } });
+    res.send({ message: "Order(s) cancelled successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while cancelling the order" });
+  }
+});
 
 app.listen(PORT, () => console.log("Server is running at port : " + PORT))

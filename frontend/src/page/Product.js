@@ -75,7 +75,7 @@ const handleSubmit = async(e)=>{
     const fetchRes =  await fetchData.json()
 
     
-    toast(fetchRes.message)
+    toast.success(fetchRes.message)
 
     setData(()=>{
       return{

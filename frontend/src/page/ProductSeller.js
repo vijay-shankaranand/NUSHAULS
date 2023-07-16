@@ -9,6 +9,7 @@ const ProductSeller = () => {
   const navigate = useNavigate();
 
   const productData = useSelector((state) => state.product.productList);
+  const orderData = useSelector((state) => state.order.orderList);
   const { filterby } = useParams();
 
 
@@ -21,6 +22,7 @@ const ProductSeller = () => {
     price: "",
     description: "",
     region: "",
+    status:""
   });
 
   const towns = [
@@ -113,7 +115,7 @@ const ProductSeller = () => {
     const data = {
       productId: filterby,
     };
-
+  
     try {
       const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/deleteProduct/${filterby}`, {
         method: "POST",
@@ -121,17 +123,15 @@ const ProductSeller = () => {
           "Content-Type": "application/json",
         },
       });
-
-      const fetchRes = await response.json()
-
-      toast(fetchRes.message)
-
+  
+        toast.success("Product deleted successfully");
         navigate("/seller-home");
-    
+      
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
+  
   const handleProductUpdate = async () => {
     setUpdateStatus("loading");
   
@@ -157,8 +157,21 @@ const ProductSeller = () => {
     }
   };
 
+  const hasOngoingOrders = orderData.some(
+    (order) =>
+      order.product === filterby &&
+      order.state !== "Expired" &&
+      order.state !== "Delivered"
+  );
+
   const handleEdit = () => {
-    openEditPopup();
+    if (hasOngoingOrders) {
+      toast.error(
+        "This product has ongoing orders. They need to be fulfilled before you can edit the listing."
+      );
+    } else {
+      openEditPopup();
+    }
   };
 
 
@@ -176,6 +189,7 @@ const ProductSeller = () => {
       })
     }
   }
+  
   return (
     <div className="">
       <div className="m-auto w-full text-center p-10 bg-amber-200">
@@ -236,11 +250,11 @@ const ProductSeller = () => {
               Delete
             </button>
             <button
-              className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
-              onClick={handleEdit}
-            >
-              Edit
-            </button>
+  className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+  onClick={handleEdit}
+>
+  Edit
+</button>
           </div>
         </div>
       </div>

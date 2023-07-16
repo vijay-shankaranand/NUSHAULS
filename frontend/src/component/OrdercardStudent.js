@@ -1,6 +1,13 @@
 import React from 'react'
 
-const Ordercard = ({image, price, id, user, name, region, timeSlot, timePlaced, residence, deliveryFee, state, timeState}) => {
+
+export function getSelectedItems() {
+  const checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
+const itemIds = Array.from(checkboxes).map(checkbox => checkbox.value);
+return itemIds;
+}
+
+const OrdercardStudent = ({image, price, id, user, name, region, timeSlot, timePlaced, residence, deliveryFee, state, timeState}) => {
   
 
   return (
@@ -34,11 +41,21 @@ const Ordercard = ({image, price, id, user, name, region, timeSlot, timePlaced, 
             <p className="text-center font-bold">Price: <span className="text-amber-500">$</span><span>{price}</span></p>
             <p className="text-center font-bold">Delivery: <span className="text-amber-500">$</span><span>{deliveryFee}</span></p>
             </div>
+            
+            <div className="flex ">
+              { (state === 'Available') ?
+                  <input class="w-4 " type="checkbox" name="selectedItems" value={id}/> :
+                  <></>
+              }
+      
+            </div>
 
+            
+            
         </div>
     </div>
     </form>
   )
 }
 
-export default Ordercard
+export default OrdercardStudent

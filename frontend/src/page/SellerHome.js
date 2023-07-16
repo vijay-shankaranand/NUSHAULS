@@ -6,7 +6,7 @@ import { setDataProduct } from "../redux/productSlice";
 
 const SellerHome = () => {
   const productData = useSelector((state=>state.product.productList))
-  const homeProductCartList = productData
+  const homeProduct = productData
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
   
@@ -40,7 +40,7 @@ const SellerHome = () => {
           </div>
 					<div className="flex flex-wrap gap-5 p-5 justify-center">
           {
-            homeProductCartList[0] && homeProductCartList.filter((product) => product.user === userData._id).map(el => {
+            homeProduct[0] && homeProduct.filter((product) => product.user === userData._id && product.status !== "Deleted").map(el => {
               return (
                 <Homecard
                 key={el._id}

@@ -16,7 +16,8 @@ const Newproduct = () => {
     price : "",
     description : "",
     user : "",
-    region: ""
+    region: "",
+    status: "Available"
   })
 
   data.user = userData._id
@@ -146,7 +147,8 @@ const Newproduct = () => {
           price : "",
           description : "",
           user : '',
-          region: ''
+          region: '',
+          status: ""
         }
       })
       navigate("/seller-home");

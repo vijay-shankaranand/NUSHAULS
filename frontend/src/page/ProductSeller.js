@@ -24,61 +24,6 @@ const ProductSeller = () => {
     status:""
   });
 
-  const towns = [
-    "Ang Mo Kio",
-    "Bedok",
-    "Bishan",
-    "Boon Lay",
-    "Bukit Batok",
-    "Bukit Merah",
-    "Bukit Panjang",
-    "Bukit Timah",
-    "Central Water Catchment",
-    "Changi",
-    "Changi Bay",
-    "Choa Chu Kang",
-    "Clementi",
-    "Downtown Core",
-    "Geylang",
-    "Hougang",
-    "Jurong East",
-    "Jurong West",
-    "Kallang",
-    "Lim Chu Kang",
-    "Mandai",
-    "Marina East",
-    "Marina South",
-    "Marine Parade",
-    "Museum",
-    "Newton",
-    "Novena",
-    "Orchard",
-    "Outram",
-    "Pasir Ris",
-    "Paya Lebar",
-    "Pioneer",
-    "Punggol",
-    "Queenstown",
-    "River Valley",
-    "Rochor",
-    "Seletar",
-    "Sembawang",
-    "Sengkang",
-    "Serangoon",
-    "Simpang",
-    "Singapore River",
-    "Southern Islands",
-    "Sungei Kadut",
-    "Tampines",
-    "Tanglin",
-    "Tengah",
-    "Toa Payoh",
-    "Tuas",
-    "Western Islands",
-    "Western Water Catchment",
-    "Woodlands",
-    "Yishun"
-  ]
 
   const handleCurrency = (e) => {
     const {name,value} = e.target
@@ -233,15 +178,8 @@ const ProductSeller = () => {
                     .description}
               </p>
             </div>
-            <div>
-              <p className="text-slate-600 font-medium">Region : </p>
-              <p>
-                {productData[0] &&
-                  productData.filter((el) => el._id === filterby)[0].region}
-              </p>
-            </div>
           </div>
-          <div className="flex gap-3 pt-2 pt-3">
+          <div className="flex gap-3 pt-2 pt-8">
             <button
               className="bg-rose-600 hover:bg-rose-800 text-white font-bold py-2 px-4 rounded"
               onClick={handleDelete}

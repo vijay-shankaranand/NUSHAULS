@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OrdercardStudent, { getSelectedItems } from "../component/OrdercardStudent";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +13,9 @@ const navigate = useNavigate();
   const orderData = useSelector((state) => state.order.orderList);
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [selectedState, setSelectedState] = useState("Current Orders");
+
+
 
 
   const fulfillItems = () => {
@@ -90,13 +93,29 @@ const navigate = useNavigate();
           </div>
           <form>
           <div className="flex p-10">
+          <select
+    value={selectedState}
+    onChange={(e) => setSelectedState(e.target.value)}
+    className="bg-white border border-gray-300 rounded px-3 py-1 mr-2"
+  >
+    <option value="Current Orders">Current Orders</option>
+    <option value="Past Orders">Past Orders</option>
+  </select>
             
           <button id="fulfillButton" type="button" className="absolute right-20 bg-rose-600 hover:bg-rose-800 text-white font-bold py-2 px-4 rounded">Cancel</button>
           </div>
           
 					<div className="p-5 flex flex-col-reverse">
           {
-            orderData[0] && orderData.filter((order) => order.user === userData._id).map(el => {
+            orderData[0] &&
+            orderData
+              .filter((order) =>
+                selectedState === "Current Orders"
+                  ? order.state === "Available" || order.state === "Accepted"
+                  : order.state === "Expired" || order.state === "Delivered"
+              )
+              .filter((order) => order.user === userData._id)
+              .map(el => {
               return (
                 <OrdercardStudent
                 key={el._id}

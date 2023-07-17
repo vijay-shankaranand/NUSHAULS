@@ -107,6 +107,7 @@ const ProfileStudent = () => {
               <p className="text-lg font-semibold">Hall of Stay:</p>
               <p>{userData.address}</p>
             </div>
+            
             <div className="text-right">
               <button
                 className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
@@ -157,6 +158,10 @@ const ProfileStudent = () => {
                 <option value="Cinnamon">Cinnamon College</option>
                 <option value="RC4">RC4 College</option>
               </select>
+            </div>
+            <div className="mb-4">
+              <span className="text-red-500">*</span>Please ensure your details are accurate as they will be used for delivery purposes
+              
             </div>
             <div className="text-right">
               <button

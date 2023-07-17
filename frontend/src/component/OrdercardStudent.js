@@ -41,7 +41,6 @@ const OrdercardStudent = ({
               {(state === 'Accepted' || state === 'Delivered') && (
               <p className="text-center font-bold">
               Deliverer Contact: <span>{delivererNumber}</span>
-              <span>{deliveryFee}</span>
             </p>
               
               )}
@@ -53,7 +52,7 @@ const OrdercardStudent = ({
               )}
               {state === 'Available' && (
                 <p className="text-center font-bold">
-                  Order status: <span className="text-green-500">{state}</span>
+                  Order status: <span className="text-violet-500">Listed</span>
                 </p>
               )}
               {state === 'Expired' && (
@@ -63,7 +62,7 @@ const OrdercardStudent = ({
               )}
               {state === 'Accepted' && (
                 <p className="text-center font-bold">
-                  Order status: <span className="text-violet-500">{state}</span>
+                  Order status: <span className="text-green-500">{state}</span>
                 </p>
               )}
               {state !== 'Available' && state !== 'Expired' && state !== 'Accepted' && (
@@ -98,5 +97,6 @@ const OrdercardStudent = ({
     </form>
   );
 };
+
 
 export default OrdercardStudent;

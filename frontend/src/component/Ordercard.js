@@ -33,22 +33,22 @@ const Ordercard = ({image, price, id, user, name, region, timeSlot, timePlaced, 
               )}
               {state === 'Available' && (
                 <p className="text-center font-bold">
-                  Order status: <span className="text-green-500">{state}</span>
+                  Job status: <span className="text-green-500">{state}</span>
                 </p>
               )}
               {state === 'Expired' && (
                 <p className="text-center font-bold">
-                  Order status: <span className="text-red-500">{state}</span>
+                  Job status: <span className="text-red-500">{state}</span>
                 </p>
               )}
               {state === 'Accepted' && (
                 <p className="text-center font-bold">
-                  Order status: <span className="text-violet-500">{state}</span>
+                  Job status: <span className="text-violet-500">{state} by you</span>
                 </p>
               )}
               {state !== 'Available' && state !== 'Expired' && state !== 'Accepted' && (
                 <p className="text-center font-bold">
-                  Order status: <span className="text-zinc-500">{state}</span>
+                  Job status: <span className="text-zinc-500">{state} by you</span>
                 </p>
               )}
               

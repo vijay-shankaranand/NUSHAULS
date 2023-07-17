@@ -219,6 +219,9 @@ const ProfileStudent = () => {
           </option>
         ))}
         </select>
+        <div className="mb-4 mt-5">
+          <span className="text-red-500">*</span>Please ensure all details are accurate to facilitate smooth delivery process
+          </div>
                 
             </div>
             <div className="text-right">

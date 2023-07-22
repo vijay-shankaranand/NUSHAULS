@@ -45,6 +45,41 @@ const DeliveryPartnerHome = () => {
       .then(response => response.json())
       .then(data => {
         // Handle the response from the server if needed
+        itemIds.forEach(itemId => {
+          // Define the push notification schema for student
+          const order = orderData.find(order => order._id === itemId)
+          const product = productData.find(product => product._id === order.product)
+          const studentSchemaNotification = {
+            orderId: itemId,
+            productId: order.product, 
+            productName: product.name, 
+            timeSlot: order.timeSlot, 
+            sellerId: "delivered",
+            studentId: order.user,
+            sellerViewed: true,
+            studentViewed: false 
+          };
+  
+          // Make the API call to push the notification for the student
+          fetch(`${process.env.REACT_APP_SERVER_DOMIN}/pushNotification`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(studentSchemaNotification)
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Handle the response from the server if needed
+            })
+            .catch(error => {
+              // Handle any errors that occurred during the request
+              console.error(error);
+            });
+            
+        });
+
+
         setShowModal(false)
         toast("Order(s) Delivered")
         navigate("/myjobs")
@@ -93,7 +128,7 @@ const DeliveryPartnerHome = () => {
     <div className="">
 					
           <div className="m-auto w-full text-center p-10 bg-amber-200">
-          <h2 className="text-4xl font-bold"> My <span className="text-amber-500">Jobs</span></h2>
+          <h2 className="text-4xl font-bold"> Your <span className="text-amber-500">Jobs</span></h2>
           </div>
           <form>
           <div className="flex p-10">

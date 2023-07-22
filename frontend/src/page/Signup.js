@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ImagetoBase64 } from "../utility/ImagetoBase64";
 import { toast } from "react-hot-toast";
 
+
 function Signup() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +29,7 @@ function Signup() {
     };
 
     const handleOnChange = (e) => {
+       
         const { name, value } = e.target;
         setData((preve) => {
             return {
@@ -35,6 +37,7 @@ function Signup() {
                 [name]: value,
             };
         });
+    
     };
 
 
@@ -171,7 +174,7 @@ function Signup() {
                         </span>
                     </div>
 
-                    <label for="role">Role</label>
+                    <label htmlFor="role">Role</label>
                     <select className="flex px-2 py-2 bg-slate-200 rounded mt-1 mb-2  focus-within:outline focus-within:outline-blue-300"
                         id="role"
                         name="role"

@@ -96,6 +96,7 @@ const DeliveryPartnerHome = () => {
     const delivererId = userData._id;
     const delivererName = userData.firstName;
     const delivererNum = userData.number
+
     
     fetch(`${process.env.REACT_APP_SERVER_DOMIN}/orderAccept`, {
       method: "POST",
@@ -107,7 +108,40 @@ const DeliveryPartnerHome = () => {
       .then(response => response.json())
       .then(data => {
         // Handle the response from the server if needed
-        
+        itemIds.forEach(itemId => {
+          // Define the push notification schema for student
+          const order = orderData.find(order => order._id === itemId)
+          const product = productData.find(product => product._id === order.product)
+          const studentSchemaNotification = {
+            orderId: itemId,
+            productId: order.product, 
+            productName: product.name, 
+            timeSlot: order.timeSlot, 
+            sellerId: product.user,
+            studentId: order.user,
+            sellerViewed: false,
+            studentViewed: false 
+          };
+  
+          // Make the API call to push the notification for the student
+          fetch(`${process.env.REACT_APP_SERVER_DOMIN}/pushNotification`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(studentSchemaNotification)
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Handle the response from the server if needed
+            })
+            .catch(error => {
+              // Handle any errors that occurred during the request
+              console.error(error);
+            });
+            
+        });
+  
         toast("Order(s) accepted successfully")
         setShowModal(false); // Hide the verification modal
         navigate("/myjobs")

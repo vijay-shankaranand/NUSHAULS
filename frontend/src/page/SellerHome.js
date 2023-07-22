@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import Homecard from "../component/Homecard"
 import { useSelector, useDispatch } from "react-redux";
 import { setDataProduct } from "../redux/productSlice";
+import { setDataNotification } from "../redux/notificationSlice";
 
 const SellerHome = () => {
   const productData = useSelector((state=>state.product.productList))
+  const notificationData = useSelector((state) => state.notification.notificationList.slice().reverse());
   const homeProduct = productData
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -24,9 +26,24 @@ const SellerHome = () => {
 
     fetchProductData();
   }, [dispatch]);
+
+  useEffect(() => {
+    // Fetch product data asynchronously
+    const fetchNotificationData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/notification`);
+        const data = await response.json();
+        dispatch(setDataNotification(data)); // Dispatch action to update product data in the Redux store
+      } catch (error) {
+        console.error("Error fetching notification data:", error);
+      }
+    };
+
+    fetchNotificationData();
+  }, [dispatch]);
   
   
-  
+  console.log(notificationData)
   return (
     <div className="">
 					

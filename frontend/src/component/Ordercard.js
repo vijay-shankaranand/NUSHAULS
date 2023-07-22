@@ -51,6 +51,9 @@ const Ordercard = ({image, price, id, user, name, region, timeSlot, timePlaced, 
                   Job status: <span className="text-zinc-500">{state} by you</span>
                 </p>
               )}
+              <p className="text-center text-sm pt-5">
+                <span className="font-bold">Order ID:</span> {id}
+                </p>
               
             </div>
           </div>

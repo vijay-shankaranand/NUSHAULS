@@ -82,6 +82,7 @@ const Login = () => {
   }
 
   return (
+    <div>
     <div className="p-20 md:p-20">
     <div className="w-full max-w-sm bg-white m-auto flex  flex-col p-4">
       {/* <h1 className='text-center text-2xl font-bold'>Sign up</h1> */}
@@ -130,6 +131,10 @@ const Login = () => {
         </Link>
       </p>
     </div>
+  </div>
+  <div className="text-center">
+  <span className="text-red-500 pl-2">* </span>Kindly remember to fill in your role specific details under <span className="font-bold">My Profile</span> before beginning any transaction!
+  </div>
   </div>
   )
 }

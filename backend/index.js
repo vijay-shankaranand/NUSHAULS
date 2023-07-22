@@ -40,6 +40,7 @@ const userSchema = mongoose.Schema({
 
 const userModel = mongoose.model("user", userSchema);
 
+
 //api
 app.get("/", (req, res)=>{
     res.send("Server is running");
@@ -221,6 +222,7 @@ app.put('/editProduct/:productId', (req, res) => {
 });
 
 
+
 //orders section
 
 const schemaOrder = mongoose.Schema({
@@ -318,5 +320,67 @@ app.post('/cancelOrder', async (req, res) => {
     res.status(500).json({ error: "An error occurred while cancelling the order" });
   }
 });
+
+//notification section
+
+const schemaNotification = mongoose.Schema({
+  orderId: String,
+  productId: String, 
+  productName: String,
+  timeSlot: String,
+  studentId: String,
+  sellerId: String,
+  sellerViewed: Boolean,
+  studentViewed: Boolean 
+})
+
+const notificationModel = mongoose.model("notification", schemaNotification)
+
+app.post("/pushNotification" , async (req, res) => {
+  console.log(req.body)
+  const data = await notificationModel(req.body)
+  const datasave = await data.save()
+  res.send({message: "Notification sent successfully"})
+}) 
+
+app.get("/notification", async (req,res) => {
+  const data = await notificationModel.find({})
+  res.send(JSON.stringify(data))
+})
+
+app.post("/updateNotification", async(req, res) => {
+
+  const { id } = req.body;
+  const user = await userModel.findOne({ _id: id })
+
+  await notificationModel.deleteMany({ studentViewed: true, sellerViewed: true });
+
+  if (user.role === "student") {
+    try {
+      await notificationModel.updateMany(
+        { studentId: { $in: id } },
+        { $set: { studentViewed: true }}
+      );
+      res.json({ message: 'Student has viewed the notification' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while student viewed notification' });
+    }
+  } else {
+    try {
+      await notificationModel.updateMany(
+        { sellerId: { $in: id } },
+        { $set: { sellerViewed: true }}
+      );
+      res.json({ message: 'Seller has viewed the notification' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while seller viewed notification' });
+    }
+  }
+
+})
+
+module.exports = { app,userModel, productModel, orderModel, notificationModel };
 
 app.listen(PORT, () => console.log("Server is running at port : " + PORT))

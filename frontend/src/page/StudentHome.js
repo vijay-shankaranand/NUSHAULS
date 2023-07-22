@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setDataProduct } from "../redux/productSlice";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import { setDataNotification } from "../redux/notificationSlice";
 
 const StudentHome = () => {
   const productData = useSelector((state=>state.product.productList))
@@ -95,6 +96,20 @@ const StudentHome = () => {
     fetchProductData();
   }, [dispatch]);
   
+  useEffect(() => {
+    // Fetch product data asynchronously
+    const fetchNotificationData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/notification`);
+        const data = await response.json();
+        dispatch(setDataNotification(data)); // Dispatch action to update product data in the Redux store
+      } catch (error) {
+        console.error("Error fetching notification data:", error);
+      }
+    };
+
+    fetchNotificationData();
+  }, [dispatch]);
 
 
   return (

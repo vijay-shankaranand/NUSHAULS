@@ -178,6 +178,14 @@ const ProductSeller = () => {
                     .description}
               </p>
             </div>
+            <div>
+              <p className="text-slate-600 font-medium">Product ID : </p>
+              <p>
+                {productData[0] &&
+                  productData.filter((el) => el._id === filterby)[0]
+                    ._id}
+              </p>
+            </div>
           </div>
           <div className="flex gap-3 pt-2 pt-8">
             <button

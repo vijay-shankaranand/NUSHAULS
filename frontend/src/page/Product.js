@@ -164,6 +164,7 @@ const handleCancel = () => {
   setShowModal(false); // Hide the verification modal
 };
 
+
     return (
       
         <div className="">
@@ -195,14 +196,17 @@ const handleCancel = () => {
               <p>{productData[0] && productData.filter((el) => el._id === filterby)[0].description}</p>
             </div>
             <div>
-              <p className="font-bold md:text-2xl text-xl pt-2 text-center">Delivery Information </p>
+              <p className="font-bold md:text-2xl text-xl pt-3">------------------------------------------------------------------------------</p>
+            </div>
+            <div>
+              <p className="font-bold md:text-2xl text-xl pt-1 text-center">Delivery Information </p>
             </div>
 
             <div>
-              <p className="text-slate-600 font-medium">Seller Location : </p>
+              <p className="text-slate-600 font-medium pt-5">Seller Location : </p>
               <p>{sellerLocation}</p>
             </div>
-            <label for="timeSlot" className="text-slate-600 font-medium">Choose a timeslot for delivery:</label> 
+            <label for="timeSlot" className="text-slate-600 font-medium pt-2">Choose a timeslot for delivery:</label> 
     <select className="bg-slate-100 border-solid border-2 rounded border-slate-600 p-2"
     name="timeSlot"
     id="timeSlot"
@@ -216,14 +220,14 @@ const handleCancel = () => {
         </option>
       ))} 
     </select>
-    <div className="font-bold text-l pt-2">
+    <div className="font-bold text-l pt-4">
             <p>
-          Delivery fee: <span className="text-amber-500">$</span>{deliveryEst.toFixed(2)} ({deliveryEst.toFixed(2)/0.40} km from NUS)
+          Delivery fee: <span className="text-amber-500">$</span>{deliveryEst.toFixed(2)} ({(deliveryEst.toFixed(2)/0.40).toFixed(2)} km from NUS)
         </p> 
           
             </div>   
     
-    <div className="font-bold text-3xl pt-5">Grand Total: <span className="text-amber-500 ">$</span>{productData[0] && Number(productData.filter((el) => el._id === filterby)[0].price) + deliveryEst.toFixed(2)}</div>
+    <div className="font-bold text-3xl pt-5">Grand Total: <span className="text-amber-500 ">$</span>{productData[0] && Number(productData.filter((el) => el._id === filterby)[0].price) + Number(deliveryEst.toFixed(2))}</div>
     <div className="flex gap-3 pt-3">
         <button
           onClick={handleVerification}

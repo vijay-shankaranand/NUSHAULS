@@ -206,9 +206,6 @@ app.put('/editProduct/:productId', (req, res) => {
   const updatedProductData = req.body;
 
   // Update the product in the database based on the productId and updatedProductData
-  // Your implementation logic goes here...
-
-  // For example, you can use a database query or ORM to update the product
   productModel.findByIdAndUpdate(productId, updatedProductData, { new: true })
     .then(updatedProduct => {
       // Send a response indicating the success of the update operation

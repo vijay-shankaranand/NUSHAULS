@@ -1,10 +1,11 @@
 const axios = require('axios');
-const { app, userModel, productModel, orderModel } = require('./index');
+const { app, userModel, productModel, orderModel, notificationModel } = require('./index');
 const Token = require("./models/token");
 const crypto = require("crypto");
+const mongoose = require('mongoose')
 
 
-const SERVER_URL = 'http://localhost:8080'; // Replace with the URL of your running backend server
+const SERVER_URL = 'http://localhost:8080'; 
 
 
 describe('POST /signup', () => {
@@ -168,7 +169,7 @@ describe('POST /uploadProduct', () => {
 });
 
 describe('GET /product', () => {
-  // ... (existing beforeAll and afterAll hooks)
+  
   afterEach(async () => {
     // Clean up the database after each test
     await productModel.deleteMany({});
@@ -201,13 +202,13 @@ describe('GET /product', () => {
 
     expect(response.status).toBe(200);
     expect(response.data).toHaveLength(2); // We expect all products to be fetched
-    // Add other assertions as needed
+    
   });
 
 });
 
 describe('POST /deleteProduct', () => {
-  // ... (existing beforeAll and afterAll hooks)
+  
   afterEach(async () => {
     // Clean up the database after each test
     await productModel.deleteMany({});
@@ -239,7 +240,7 @@ describe('POST /deleteProduct', () => {
 });
 
 describe('PUT /editProduct', () => {
-  // ... (existing beforeAll and afterAll hooks)
+  
   afterEach(async () => {
     // Clean up the database after each test
     await productModel.deleteMany({});
@@ -328,6 +329,12 @@ describe('POST /uploadOrder', () => {
     await orderModel.deleteMany({});
   });
 
+  afterEach(async () => {
+    // Before each test, clear the userModel and orderModel collections
+    await userModel.deleteMany({});
+    await orderModel.deleteMany({});
+  });
+
   it('should upload an order successfully', async () => {
     // Define the order data
     const orderData = {
@@ -374,5 +381,334 @@ describe('POST /uploadOrder', () => {
   // Add more test cases as needed for different scenarios
 
 });
+
+describe('GET /order', () => {
+  afterEach(async () => {
+    // Clean up the database after each test
+    await orderModel.deleteMany({});
+  });
+
+  it('should return all orders', async () => {
+    // Create some orders with specific time slots and states in the database
+    const orders = [
+      {
+        product: 'Product 1',
+        timeSlot: '24:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 2',
+        timeSlot: '24:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 3',
+        timeSlot: '24:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 4',
+        timeSlot: '24:00',
+        state: 'Available', // Not 'Available', so this should not be updated
+      },
+    ];
+
+    await orderModel.insertMany(orders);
+
+    // Make the GET request to the /order endpoint using axios
+    const response = await axios.get(`${SERVER_URL}/order`);
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the response data contains the updated order data
+    const updatedOrders = response.data;
+    expect(updatedOrders).toHaveLength(4);
+    
+    
+    
+  });
+
+  it('should set expired state for relevant orders if current time is after timeslot', async () => {
+    
+    // Create some orders with specific time slots and states in the database
+    const orders = [
+      {
+        product: 'Product 1',
+        timeSlot: '00:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 2',
+        timeSlot: '00:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 3',
+        timeSlot: '00:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 4',
+        timeSlot: '00:00',
+        state: 'Available', // Not 'Available', so this should not be updated
+      },
+    ];
+
+    await orderModel.insertMany(orders);
+
+    // Make the GET request to the /order endpoint using axios
+    const response = await axios.get(`${SERVER_URL}/order`);
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the response data contains the updated order data
+    const updatedOrders = response.data;
+    expect(updatedOrders.every((order) => order.state === 'Expired')).toBe(true);
+    
+    
+    
+  });
+
+});
+
+describe('POST /cancelOrder', () => {
+  afterEach(async () => {
+    // Clean up the database after each test
+    await orderModel.deleteMany({});
+  });
+
+  it('should cancel the specified order(s)', async () => {
+    // Create some orders in the database
+    const orders = [
+      {
+        product: 'Product 1',
+        timeSlot: '09:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 2',
+        timeSlot: '11:30',
+        state: 'Available',
+      },
+      {
+        product: 'Product 3',
+        timeSlot: '13:45',
+        state: 'Available',
+      },
+    ];
+
+    const savedOrders = await orderModel.insertMany(orders);
+
+    // Extract the IDs of the orders to cancel
+    const itemIds = savedOrders.map((order) => order._id.toString());
+
+    // Make the POST request to the /cancelOrder endpoint using axios
+    const response = await axios.post(`${SERVER_URL}/cancelOrder`, { itemIds });
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the orders have been deleted from the database
+    const canceledOrders = await orderModel.find({ _id: { $in: itemIds } });
+    expect(canceledOrders).toHaveLength(0); // The orders should not exist in the database after cancellation
+  });
+
+});
+
+describe('POST /orderAccept', () => {
+  afterEach(async () => {
+    // Clean up the database after each test
+    await orderModel.deleteMany({});
+  });
+
+  it('should accept the specified order(s)', async () => {
+    // Create some orders in the database
+    const orders = [
+      {
+        product: 'Product 1',
+        timeSlot: '09:00',
+        state: 'Available',
+      },
+      {
+        product: 'Product 2',
+        timeSlot: '11:30',
+        state: 'Available',
+      },
+      {
+        product: 'Product 3',
+        timeSlot: '13:45',
+        state: 'Available',
+      },
+    ];
+
+    const savedOrders = await orderModel.insertMany(orders);
+
+    // Extract the IDs of the orders to accept
+    const itemIds = savedOrders.map((order) => order._id.toString());
+
+    const delivererId = 'deliverer_id';
+    const delivererName = 'Deliverer Name';
+    const delivererNum = 'Deliverer Number';
+
+    // Make the POST request to the /orderAccept endpoint using axios
+    const response = await axios.post(`${SERVER_URL}/orderAccept`, {
+      itemIds,
+      delivererId,
+      delivererName,
+      delivererNum,
+    });
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the orders have been updated in the database with the new state and deliverer details
+    const acceptedOrders = await orderModel.find({ _id: { $in: itemIds }, state: 'Accepted', deliverer: delivererId, delivererName, delivererNum });
+    expect(acceptedOrders).toHaveLength(savedOrders.length); // All orders should be updated to the Accepted state
+  });
+
+});
+
+describe('POST /orderDeliver', () => {
+  beforeEach(async () => {
+    // Create test data in the database
+    await orderModel.insertMany([
+      {
+        _id: '70956c36a12c0500245f8d73', // Convert the string to ObjectId
+        state: 'Accepted',
+      },
+      {
+        _id: '70956c36a12c0500245f8d74', // Convert the string to ObjectId
+        state: 'Accepted',
+      },
+    ]);
+  });
+
+  afterEach(async () => {
+    // Clean up the database after each test
+    await orderModel.deleteMany({});
+  });
+
+  it('should mark item(s) as delivered', async () => {
+    const orderIds = ['70956c36a12c0500245f8d73', '70956c36a12c0500245f8d74'];
+
+    // Make the POST request to the /orderDeliver endpoint using axios
+    const response = await axios.post(`${SERVER_URL}/orderDeliver`, { itemIds: orderIds });
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the items have been updated as delivered
+    const updatedOrders = await orderModel.find({ _id: { $in: orderIds } });
+    expect(updatedOrders).toHaveLength(2); // Both orders should still exist
+    expect(updatedOrders.every((o) => o.state === 'Delivered')).toBe(true); // All orders should be marked as delivered
+  });
+
+});
+
+describe('POST /pushNotification', () => {
+  afterEach(async () => {
+    // Clean up the database after each test
+    await notificationModel.deleteMany({});
+  });
+
+  it('should send a notification successfully', async () => {
+    const notificationData = {
+      orderId: 'order123',
+      productId: 'product123',
+      productName: 'Test Product',
+      timeSlot: '10:00 AM - 12:00 PM',
+      studentId: 'student123',
+      sellerId: 'seller123',
+      sellerViewed: false,
+      studentViewed: false,
+    };
+
+    // Make the POST request to the /pushNotification endpoint using axios
+    const response = await axios.post(`${SERVER_URL}/pushNotification`, notificationData);
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the notification has been saved in the database
+    const savedNotification = await notificationModel.findOne({ orderId: notificationData.orderId });
+    expect(savedNotification).toBeTruthy();
+    expect(savedNotification.productId).toBe(notificationData.productId);
+    expect(savedNotification.productName).toBe(notificationData.productName);
+  });
+});
+
+describe('POST /updateNotification', () => {
+
+  beforeEach(async () => {
+    // Create test data in the database
+    await notificationModel.insertMany([
+      {
+        orderId: 'order1',
+        productId: 'product1',
+        productName: 'Product 1',
+        timeSlot: '10:00 AM - 12:00 PM',
+        studentId: '70956c36a12c0500245f8d71',
+        sellerId: '70956c36a12c0500245f8d72',
+        sellerViewed: false,
+        studentViewed: false,
+      },
+      {
+        orderId: 'order2',
+        productId: 'product2',
+        productName: 'Product 2',
+        timeSlot: '2:00 PM - 4:00 PM',
+        studentId: '70956c36a12c0500245f8d71',
+        sellerId: '70956c36a12c0500245f8d72',
+        sellerViewed: false,
+        studentViewed: false,
+      },
+    ]);
+  });
+
+  afterEach(async () => {
+    // Clean up the database after each test
+    await userModel.deleteMany({});
+    await notificationModel.deleteMany({});
+  });
+
+  it('student has viewed notification', async () => {
+    const user = { role: 'student', _id: '70956c36a12c0500245f8d71' };
+    await new userModel(user).save();
+
+    // Make the POST request to the /updateNotification endpoint using axios
+    const response = await axios.post(`${SERVER_URL}/updateNotification`, {id : '70956c36a12c0500245f8d71'});
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the student notifications have been updated as viewed
+    const updatedNotifications = await notificationModel.find({ studentId: '70956c36a12c0500245f8d71' });
+    expect(updatedNotifications).toHaveLength(2); // Both notifications should still exist
+    expect(updatedNotifications.every((n) => n.studentViewed)).toBe(true); // All studentViewed should be true
+  });
+
+  it('seller has viewed notification', async () => {
+    const user = { role: 'seller', _id: '70956c36a12c0500245f8d72' };
+
+    await new userModel(user).save();
+
+    // Make the POST request to the /updateNotification endpoint using axios
+    const response = await axios.post(`${SERVER_URL}/updateNotification`, {id: '70956c36a12c0500245f8d72'});
+
+    // Verify that the response status is 200
+    expect(response.status).toBe(200);
+
+    // Verify that the seller notifications have been updated as viewed
+    const updatedNotifications = await notificationModel.find({ sellerId: '70956c36a12c0500245f8d72' });
+    expect(updatedNotifications).toHaveLength(2); // Both notifications should still exist
+    expect(updatedNotifications.every((n) => n.sellerViewed)).toBe(true); // All sellerViewed should be true
+  });
+});
+
+
+
+
 
 

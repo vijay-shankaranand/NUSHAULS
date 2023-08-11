@@ -32,10 +32,14 @@ const userSchema = mongoose.Schema({
         confirmPassword: String,
         role: String,
         image: String,
-        verified: { type:Boolean, default : false}
+        verified: { type:Boolean, default : false},
+        address: String,
+        number: String,
+        region: String
 });
 
 const userModel = mongoose.model("user", userSchema);
+
 
 //api
 app.get("/", (req, res)=>{
@@ -66,6 +70,33 @@ app.post("/signup", async(req,res)=>{
       }
     
 })
+
+app.put("/updateUser", async (req, res) => {
+  const { _id, address, number , region} = req.body;
+  console.log(address)
+  try {
+    // Find the user in the database based on their ID or any other identifier
+    const user = await userModel.findById({_id});
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update the user data
+    user.address = address;
+    user.number = number;
+    user.region = region;
+
+    // Save the updated user data to the database
+    await user.save();
+
+    // Send a response indicating the successful update
+    res.json({ message: "User data updated successfully" });
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    res.status(500).json({ error: "An error occurred while updating user data" });
+  }
+});
 
 app.get("/:id/verify/:token/", async (req, res) => {
 	try {
@@ -101,7 +132,10 @@ app.post("/login", async(req, res)=> {
             email: result.email,
             role: result.role,
             image: result.image,
-            verified: result.verified
+            verified: result.verified,
+            address: result.address,
+            number: result.number,
+            region:result.region
           };
           console.log(dataSend)
           if (dataSend.verified == false) {
@@ -133,7 +167,10 @@ const schemaProduct = mongoose.Schema({
     price : String,
     description : String,
     user : String,
-    region : String
+    region : String,
+    status: String,
+    address: String,
+    number: String
 });
 
 const productModel = mongoose.model("product", schemaProduct)
@@ -153,6 +190,35 @@ app.get("/product", async (req,res) => {
   res.send(JSON.stringify(data))
 })
 
+app.post("/deleteProduct/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await productModel.updateOne({ _id: id }, { status: "Deleted" });
+    res.send({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while deleting the product" });
+  }
+});
+
+app.put('/editProduct/:productId', (req, res) => {
+  const productId = req.params.productId;
+  const updatedProductData = req.body;
+
+  // Update the product in the database based on the productId and updatedProductData
+  productModel.findByIdAndUpdate(productId, updatedProductData, { new: true })
+    .then(updatedProduct => {
+      // Send a response indicating the success of the update operation
+      res.json({ success: true, message: 'Product updated successfully' });
+    })
+    .catch(error => {
+      console.error('Error updating product:', error);
+      // Send a response indicating the failure of the update operation
+      res.status(500).json({ success: false, message: 'Failed to update product' });
+    });
+});
+
+
 
 //orders section
 
@@ -165,7 +231,10 @@ const schemaOrder = mongoose.Schema({
   residence: String,
   deliveryFee: String,
   user : String,
-  deliverer: String
+  deliverer: String,
+  studentNumber: String,
+  delivererNum: String,
+  delivererName: String
 })
 
 const orderModel = mongoose.model("order", schemaOrder)
@@ -209,12 +278,12 @@ app.get("/order", async (req, res) => {
 });
 
 app.post("/orderAccept" , async (req, res) => {
-  const { itemIds, delivererId } = req.body;
+  const { itemIds, delivererId, delivererName, delivererNum } = req.body;
   console.log(delivererId)
   try {
     await orderModel.updateMany(
       { _id: { $in: itemIds } },
-      { $set: { state: 'Accepted' , deliverer: delivererId }}
+      { $set: { state: 'Accepted' , deliverer: delivererId, delivererName: delivererName, delivererNum: delivererNum }}
     );
     res.json({ message: 'Item(s) accepted successfully' });
   } catch (error) {
@@ -235,6 +304,80 @@ app.post("/orderDeliver" , async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while accepted items' });
   }
+})
+
+app.post('/cancelOrder', async (req, res) => {
+  const { itemIds } = req.body
+  console.log(itemIds)
+  try {
+    await orderModel.deleteMany({ _id: { $in: itemIds } });
+    res.send({ message: "Order(s) cancelled successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while cancelling the order" });
+  }
+});
+
+//notification section
+
+const schemaNotification = mongoose.Schema({
+  orderId: String,
+  productId: String, 
+  productName: String,
+  timeSlot: String,
+  studentId: String,
+  sellerId: String,
+  sellerViewed: Boolean,
+  studentViewed: Boolean 
+})
+
+const notificationModel = mongoose.model("notification", schemaNotification)
+
+app.post("/pushNotification" , async (req, res) => {
+  console.log(req.body)
+  const data = await notificationModel(req.body)
+  const datasave = await data.save()
+  res.send({message: "Notification sent successfully"})
 }) 
+
+app.get("/notification", async (req,res) => {
+  const data = await notificationModel.find({})
+  res.send(JSON.stringify(data))
+})
+
+app.post("/updateNotification", async(req, res) => {
+
+  const { id } = req.body;
+  const user = await userModel.findOne({ _id: id })
+
+  await notificationModel.deleteMany({ studentViewed: true, sellerViewed: true });
+
+  if (user.role === "student") {
+    try {
+      await notificationModel.updateMany(
+        { studentId: { $in: id } },
+        { $set: { studentViewed: true }}
+      );
+      res.json({ message: 'Student has viewed the notification' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while student viewed notification' });
+    }
+  } else {
+    try {
+      await notificationModel.updateMany(
+        { sellerId: { $in: id } },
+        { $set: { sellerViewed: true }}
+      );
+      res.json({ message: 'Seller has viewed the notification' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while seller viewed notification' });
+    }
+  }
+
+})
+
+module.exports = { app,userModel, productModel, orderModel, notificationModel };
 
 app.listen(PORT, () => console.log("Server is running at port : " + PORT))

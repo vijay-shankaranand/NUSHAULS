@@ -1,44 +1,105 @@
-import React from 'react'
+import React from 'react';
 
-const Ordercard = ({image, price, id, user, name, region, timeSlot, timePlaced, residence, deliveryFee, state, timeState}) => {
-  
-
-  return (
-    <form>
-    <div className="p-2">
-        <div className='bg-amber-200 shadow-md p-2 rounded cursor-pointer hover:shadow-lg drop-shadow-lg flex justify-evenly'>
-            <div className="h-[220px] w-[200px] border-4">
-                <img src={image} className="h-full w-full" alt='loading'/>
-            </div>
-
-            <div className="flex flex-col align-center justify-between">
-              <h3 className='font-semibold text-slate-600 text-center capitalize text-lg overflow-hidden'>{name}</h3>
-              <div className= "flex flex-col">
-              <p className="text-center font-bold">Product location: {region}</p>
-              <p className="text-center font-bold">Residence/Hall: {residence}</p>
-              {(state !== "Expired" && state !== "Delivered") ?
-              <p className="text-center font-bold">Deliver by: <span className="text-sky-500">{timeSlot}</span></p> :
-              <p></p>
-              }
-              { (state === "Available") ?
-              <p className="text-center font-bold">Order status: <span className="text-green-500">{state}</span></p> :
-                (state === "Expired") ?
-              <p className="text-center font-bold">Order status: <span className="text-red-500">{state}</span></p> :
-                (state === "Accepted") ?
-                <p className="text-center font-bold">Order status: <span className="text-violet-500">{state}</span></p> :
-                <p className="text-center font-bold">Order status: <span className="text-zinc-500">{state}</span></p>
-              }
-              </div>
-              </div>
-            <div className="flex flex-col items-end justify-center">
-            <p className="text-center font-bold">Price: <span className="text-amber-500">$</span><span>{price}</span></p>
-            <p className="text-center font-bold">Delivery: <span className="text-amber-500">$</span><span>{deliveryFee}</span></p>
-            </div>
-
-        </div>
-    </div>
-    </form>
-  )
+export function getSelectedItems() {
+  const checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
+  const itemIds = Array.from(checkboxes).map((checkbox) => checkbox.value);
+  return itemIds;
 }
 
-export default Ordercard
+const OrdercardStudent = ({
+  image,
+  price,
+  id,
+  user,
+  name,
+  region,
+  timeSlot,
+  timePlaced,
+  residence,
+  deliveryFee,
+  state,
+  timeState,
+  address,
+  number,
+  delivererNumber
+}) => {
+  return (
+    <form>
+      <div className="p-2">
+        <div className="bg-amber-200 shadow-md p-2 rounded cursor-pointer hover:shadow-lg drop-shadow-lg flex justify-between items-center">
+          <div className="h-[220px] w-[200px] border-4">
+            <img src={image} className="h-full w-full" alt="loading" />
+          </div>
+          
+          <div className="flex flex-col flex-grow pl-2">
+            <h3 className="font-semibold text-slate-600 text-top text-center capitalize text-lg overflow-hidden pb-5">
+              {name}
+            </h3>
+            <div className="flex flex-col mt-2">
+              <p className="text-center font-bold">Product location: {address}</p>
+              <p className="text-center font-bold">Seller contact: {number}</p>
+              {(state === 'Accepted' || state === 'Delivered') && (
+              <p className="text-center font-bold">
+              Deliverer Contact: <span>{delivererNumber}</span>
+            </p>
+              
+              )}
+              <p className="text-center font-bold">Residence/Hall: {residence}</p>
+              {state !== 'Expired' && state !== 'Delivered' && (
+                <p className="text-center font-bold">
+                  Deliver by: <span className="text-sky-500">{timeSlot}</span>
+                </p>
+              )}
+              {state === 'Available' && (
+                <p className="text-center font-bold">
+                  Order status: <span className="text-violet-500">Listed</span>
+                </p>
+              )}
+              {state === 'Expired' && (
+                <p className="text-center font-bold">
+                  Order status: <span className="text-red-500">{state}</span>
+                </p>
+              )}
+              {state === 'Accepted' && (
+                <p className="text-center font-bold">
+                  Order status: <span className="text-green-500">{state}</span>
+                </p>
+              )}
+              {state !== 'Available' && state !== 'Expired' && state !== 'Accepted' && (
+                <p className="text-center font-bold">
+                  Order status: <span className="text-zinc-500">{state}</span>
+                </p>
+              )}
+              <p className="text-center text-sm pt-5">
+                <span className="font-bold">Order ID:</span> {id}
+                </p>
+              
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end justify-center">
+            <p className="text-center font-bold">
+              Price: <span className="text-amber-500">$</span>
+              <span>{price}</span>
+            </p>
+            <p className="text-center font-bold">
+              Delivery: <span className="text-amber-500">$</span>
+              <span>{deliveryFee}</span>
+            </p>
+            
+          </div>
+          <div className="p-10">
+          {state === 'Available' && (
+            <div>
+              <input className="w-4 h-4" type="checkbox" name="selectedItems" value={id} />
+            </div>
+          )}
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+
+export default OrdercardStudent;

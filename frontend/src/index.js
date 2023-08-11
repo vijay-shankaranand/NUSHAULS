@@ -13,7 +13,9 @@ import LandingPage from "./page/LandingPage";
 import EmailVerify from "./page/EmailVerify";
 import { store } from "./redux/index";
 import { Provider } from "react-redux";
-import Profile from "./page/Profile";
+import ProfileSeller from "./page/ProfileSeller";
+import ProfileDp from "./page/ProfileDp.js";
+import ProfileStudent from "./page/ProfileStudent";
 import Newproduct from "./page/Newproduct";
 import Myorders from "./page/Myorders";
 import Product from "./page/Product";
@@ -41,7 +43,7 @@ return (
 <Route path="login" element={<Login />} />
 <Route path="unauthorised" element={<Unauthorised/>}/>
 <Route path="/index/:id/verify/:token" element={<EmailVerify />} />
-<Route path="profile" element={<Profile />} />
+
       
 { /* seller routes */}
 
@@ -49,6 +51,7 @@ return (
       <Route path="seller-home" element={<SellerHome />} />
         <Route path="newproduct" element={<Newproduct />} />
         <Route path="product-seller/:filterby" element={<ProductSeller />} />
+        <Route path="profile-seller/:id" element={<ProfileSeller />} />
         </Route>
 
 
@@ -57,12 +60,14 @@ return (
         <Route path="student-home" element={<StudentHome />} />
         <Route path="product/:filterby" element={<Product />} />
         <Route path="myorders" element={<Myorders />} />
+        <Route path="profile-student/:id" element={<ProfileStudent />} />
         </Route>
 
         { /* delivery-partner routes */}
         <Route element={<RequireAuth allowedRole="delivery-partner"/>}>
         <Route path="delivery-partner-home" element={<DeliveryPartnerHome />} />
         <Route path="myjobs" element={<Myjobs />} />
+        <Route path="profile-dp/:id" element={<ProfileDp />} />
         </Route>
         
 

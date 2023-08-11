@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { setDataProduct } from "./redux/productSlice";
 import { useSelector } from "react-redux";
 import { setDataOrder } from "./redux/orderSlice"
+import { setDataNotification } from "./redux/notificationSlice";
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { checkAuthState } from './redux/userSlice';
@@ -16,8 +17,7 @@ function App() {
   const productData = useSelector((state)=>state.product)
   const orderData = useSelector((state)=>state.order)
   const userData = useSelector((state)=> state.user)
-
-  console.log(userData)
+  const notificationData = useSelector(state => state.notification)
  
   useEffect(()=>{
     (async()=>{
@@ -32,6 +32,14 @@ function App() {
       const res = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/order`)
       const resData = await res.json()
       dispatch(setDataOrder(resData))
+    })()
+  },[])
+
+  useEffect(()=>{
+    (async()=>{
+      const res = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/notification`)
+      const resData = await res.json()
+      dispatch(setDataNotification(resData))
     })()
   },[])
 
